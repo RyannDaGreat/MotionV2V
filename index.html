@@ -99,6 +99,32 @@
             margin-bottom: 40px;
         }
 
+        .debug-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            user-select: none;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .debug-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        body.hide-panels .video-container,
+        body.hide-panels .info-box {
+            opacity: 0.1;
+        }
+
         h1 {
             font-size: 3em;
             font-weight: 700;
@@ -256,6 +282,7 @@
     </style>
 </head>
 <body>
+    <div class="debug-toggle" id="debugToggle">Hide Panels (Debug)</div>
     <div class="clock-background" id="clockBackground"></div>
 
     <div class="container">
@@ -548,21 +575,21 @@
             const arrows = [];
 
             const clockConfigs = [
-                { size: 300, x: '5%', y: '10%', depth: 0.3, hourSpeed: 0.5, minuteSpeed: 6, depthClass: 'far' },
-                { size: 400, x: '70%', y: '15%', depth: 0.7, hourSpeed: 0.9, minuteSpeed: 11, depthClass: 'close' },
-                { size: 250, x: '45%', y: '50%', depth: 0.15, hourSpeed: 0.3, minuteSpeed: 4, depthClass: 'far' },
-                { size: 350, x: '15%', y: '65%', depth: 0.5, hourSpeed: 0.6, minuteSpeed: 7.5, depthClass: 'medium' },
-                { size: 200, x: '80%', y: '55%', depth: 0.2, hourSpeed: 0.4, minuteSpeed: 5, depthClass: 'far' },
-                { size: 450, x: '35%', y: '30%', depth: 0.9, hourSpeed: 1.2, minuteSpeed: 14, depthClass: 'close' },
-                { size: 320, x: '60%', y: '75%', depth: 0.4, hourSpeed: 0.55, minuteSpeed: 6.5, depthClass: 'medium' },
-                { size: 280, x: '25%', y: '40%', depth: 0.35, hourSpeed: 0.5, minuteSpeed: 6, depthClass: 'medium' },
-                { size: 360, x: '85%', y: '25%', depth: 0.6, hourSpeed: 0.8, minuteSpeed: 9, depthClass: 'close' },
-                { size: 220, x: '10%', y: '85%', depth: 0.25, hourSpeed: 0.35, minuteSpeed: 4.5, depthClass: 'far' },
-                { size: 380, x: '55%', y: '10%', depth: 0.65, hourSpeed: 0.85, minuteSpeed: 10, depthClass: 'close' },
-                { size: 270, x: '40%', y: '90%', depth: 0.3, hourSpeed: 0.45, minuteSpeed: 5.5, depthClass: 'medium' },
-                { size: 310, x: '75%', y: '85%', depth: 0.45, hourSpeed: 0.6, minuteSpeed: 7, depthClass: 'medium' },
-                { size: 240, x: '20%', y: '25%', depth: 0.2, hourSpeed: 0.35, minuteSpeed: 4.2, depthClass: 'far' },
-                { size: 340, x: '90%', y: '70%', depth: 0.55, hourSpeed: 0.7, minuteSpeed: 8.5, depthClass: 'medium' }
+                { size: 300, x: '5%', y: '10%', depth: 0.3, hourSpeed: 0.5, minuteSpeed: 6, depthClass: 'far', hourOffset: 45, minuteOffset: 120 },
+                { size: 400, x: '70%', y: '15%', depth: 0.7, hourSpeed: 0.9, minuteSpeed: 11, depthClass: 'close', hourOffset: 180, minuteOffset: 270 },
+                { size: 250, x: '45%', y: '50%', depth: 0.15, hourSpeed: 0.3, minuteSpeed: 4, depthClass: 'far', hourOffset: 90, minuteOffset: 45 },
+                { size: 350, x: '15%', y: '65%', depth: 0.5, hourSpeed: 0.6, minuteSpeed: 7.5, depthClass: 'medium', hourOffset: 270, minuteOffset: 180 },
+                { size: 200, x: '80%', y: '55%', depth: 0.2, hourSpeed: 0.4, minuteSpeed: 5, depthClass: 'far', hourOffset: 30, minuteOffset: 310 },
+                { size: 450, x: '35%', y: '30%', depth: 0.9, hourSpeed: 1.2, minuteSpeed: 14, depthClass: 'close', hourOffset: 210, minuteOffset: 150 },
+                { size: 320, x: '60%', y: '75%', depth: 0.4, hourSpeed: 0.55, minuteSpeed: 6.5, depthClass: 'medium', hourOffset: 120, minuteOffset: 90 },
+                { size: 280, x: '25%', y: '40%', depth: 0.35, hourSpeed: 0.5, minuteSpeed: 6, depthClass: 'medium', hourOffset: 60, minuteOffset: 240 },
+                { size: 360, x: '85%', y: '25%', depth: 0.6, hourSpeed: 0.8, minuteSpeed: 9, depthClass: 'close', hourOffset: 315, minuteOffset: 30 },
+                { size: 220, x: '10%', y: '85%', depth: 0.25, hourSpeed: 0.35, minuteSpeed: 4.5, depthClass: 'far', hourOffset: 15, minuteOffset: 200 },
+                { size: 380, x: '55%', y: '10%', depth: 0.65, hourSpeed: 0.85, minuteSpeed: 10, depthClass: 'close', hourOffset: 240, minuteOffset: 330 },
+                { size: 270, x: '40%', y: '90%', depth: 0.3, hourSpeed: 0.45, minuteSpeed: 5.5, depthClass: 'medium', hourOffset: 135, minuteOffset: 60 },
+                { size: 310, x: '75%', y: '85%', depth: 0.45, hourSpeed: 0.6, minuteSpeed: 7, depthClass: 'medium', hourOffset: 300, minuteOffset: 285 },
+                { size: 240, x: '20%', y: '25%', depth: 0.2, hourSpeed: 0.35, minuteSpeed: 4.2, depthClass: 'far', hourOffset: 75, minuteOffset: 135 },
+                { size: 340, x: '90%', y: '70%', depth: 0.55, hourSpeed: 0.7, minuteSpeed: 8.5, depthClass: 'medium', hourOffset: 195, minuteOffset: 225 }
             ];
 
             const arrowConfigs = [
@@ -593,8 +620,11 @@
                     depth: config.depth,
                     hourSpeed: config.hourSpeed,
                     minuteSpeed: config.minuteSpeed,
+                    hourOffset: config.hourOffset,
+                    minuteOffset: config.minuteOffset,
                     x: parseFloat(config.x),
-                    y: parseFloat(config.y)
+                    y: parseFloat(config.y),
+                    depthClass: config.depthClass
                 });
             });
 
@@ -622,12 +652,21 @@
 
             arrowConfigs.forEach(config => {
                 const arrowSvg = createArrow(config.from, config.to);
+                const avgDepth = (clocks[config.from].depth + clocks[config.to].depth) / 2;
+
+                // Apply blur based on average depth of connected clocks
+                let blurAmount = 4;
+                if (avgDepth > 0.6) blurAmount = 1.5;
+                else if (avgDepth > 0.35) blurAmount = 3;
+
+                arrowSvg.style.filter = `blur(${blurAmount}px)`;
+
                 container.appendChild(arrowSvg);
                 arrows.push({
                     element: arrowSvg,
                     from: config.from,
                     to: config.to,
-                    depth: (clocks[config.from].depth + clocks[config.to].depth) / 2
+                    depth: avgDepth
                 });
             });
 
@@ -654,8 +693,8 @@
                     const minuteHand = document.getElementById(`minute-hand-${clock.id}`);
 
                     if (hourHand && minuteHand) {
-                        const hourRotation = scrollPercent * 360 * clock.hourSpeed;
-                        const minuteRotation = scrollPercent * 360 * clock.minuteSpeed;
+                        const hourRotation = clock.hourOffset + (scrollPercent * 360 * clock.hourSpeed);
+                        const minuteRotation = clock.minuteOffset + (scrollPercent * 360 * clock.minuteSpeed);
 
                         hourHand.setAttribute('transform', `rotate(${hourRotation})`);
                         minuteHand.setAttribute('transform', `rotate(${minuteRotation})`);
@@ -730,6 +769,16 @@
         document.addEventListener('DOMContentLoaded', () => {
             initializeGallery();
             initializeClockBackground();
+
+            // Debug toggle functionality
+            const debugToggle = document.getElementById('debugToggle');
+            let panelsHidden = false;
+
+            debugToggle.addEventListener('click', () => {
+                panelsHidden = !panelsHidden;
+                document.body.classList.toggle('hide-panels', panelsHidden);
+                debugToggle.textContent = panelsHidden ? 'Show Panels' : 'Hide Panels (Debug)';
+            });
         });
     </script>
 </body>
