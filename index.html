@@ -44,21 +44,42 @@
 
         .clock {
             position: absolute;
-            opacity: 0.12;
-            filter: blur(3px);
+            opacity: 0.2;
+            filter: blur(2px);
             transition: transform 0.1s ease-out;
             mix-blend-mode: screen;
             transform-origin: center center;
         }
 
-        .clock:nth-child(odd) {
+        .clock.far {
             filter: blur(4px);
-            opacity: 0.08;
+            opacity: 0.15;
         }
 
-        .clock:nth-child(3n) {
-            filter: blur(5px);
-            opacity: 0.1;
+        .clock.medium {
+            filter: blur(3px);
+            opacity: 0.18;
+        }
+
+        .clock.close {
+            filter: blur(1.5px);
+            opacity: 0.25;
+        }
+
+        .clock-arrow {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.3;
+            transition: transform 0.1s ease-out;
+        }
+
+        .clock-arrow line {
+            stroke: white;
+            stroke-width: 3;
+        }
+
+        .clock-arrow polygon {
+            fill: white;
         }
 
         .clock svg {
@@ -91,20 +112,26 @@
         }
 
         .info-box {
-            background-color: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             padding: 25px;
             margin-bottom: 30px;
             border-radius: var(--border-radius);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
         }
 
 
         .video-container {
-            background-color: white;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             margin-bottom: 40px;
             padding: 25px 0 0 0;
             border-radius: var(--border-radius);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
         }
 
         .video-title {
@@ -112,14 +139,18 @@
             font-weight: 600;
             margin-bottom: 20px;
             padding: 0 25px;
-            color: #333;
+            color: #ffffff;
             text-align: center;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
         .video-info {
             padding: 15px 25px;
             margin-bottom: 15px;
-            background-color: #f8f9fa;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .video-info-item {
@@ -133,7 +164,11 @@
 
         .video-info-label {
             font-weight: 600;
-            color: #555;
+            color: #ffffff;
+        }
+
+        .video-info-item span:not(.video-info-label) {
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .video-wrapper {
@@ -230,8 +265,8 @@
         </header>
 
         <div class="info-box">
-            <h3 style="margin-bottom: 15px; color: #333;">About These Comparisons</h3>
-            <p style="line-height: 1.6; color: #555;">
+            <h3 style="margin-bottom: 15px; color: #ffffff;">About These Comparisons</h3>
+            <p style="line-height: 1.6; color: rgba(255, 255, 255, 0.9);">
                 Each video below shows a side-by-side comparison of five different methods for motion editing.
                 All methods receive the same input video and desired motion trajectories. The videos are displayed
                 in a consistent order from left to right: <strong>Input</strong> (Original Motion), <strong>Ours</strong>, <strong>ATI</strong>, <strong>ReVideo</strong>, and <strong>Go-with-the-Flow</strong>.
@@ -431,7 +466,7 @@
             });
         }
 
-        function createClockSVG(size) {
+        function createClockSVG(size, id) {
             const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
             svg.setAttribute('width', size);
             svg.setAttribute('height', size);
@@ -467,25 +502,33 @@
             }
 
             // Hour hand
-            const hourHand = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            hourHand.setAttribute('x1', center);
-            hourHand.setAttribute('y1', center);
-            hourHand.setAttribute('x2', center);
-            hourHand.setAttribute('y2', center - radius * 0.5);
-            hourHand.setAttribute('stroke', 'white');
-            hourHand.setAttribute('stroke-width', size * 0.025);
-            hourHand.setAttribute('stroke-linecap', 'round');
+            const hourHand = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            hourHand.setAttribute('id', `hour-hand-${id}`);
+            hourHand.setAttribute('transform-origin', `${center} ${center}`);
+            const hourLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            hourLine.setAttribute('x1', center);
+            hourLine.setAttribute('y1', center);
+            hourLine.setAttribute('x2', center);
+            hourLine.setAttribute('y2', center - radius * 0.5);
+            hourLine.setAttribute('stroke', 'white');
+            hourLine.setAttribute('stroke-width', size * 0.025);
+            hourLine.setAttribute('stroke-linecap', 'round');
+            hourHand.appendChild(hourLine);
             svg.appendChild(hourHand);
 
             // Minute hand
-            const minuteHand = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            minuteHand.setAttribute('x1', center);
-            minuteHand.setAttribute('y1', center);
-            minuteHand.setAttribute('x2', center);
-            minuteHand.setAttribute('y2', center - radius * 0.75);
-            minuteHand.setAttribute('stroke', 'white');
-            minuteHand.setAttribute('stroke-width', size * 0.02);
-            minuteHand.setAttribute('stroke-linecap', 'round');
+            const minuteHand = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            minuteHand.setAttribute('id', `minute-hand-${id}`);
+            minuteHand.setAttribute('transform-origin', `${center} ${center}`);
+            const minuteLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            minuteLine.setAttribute('x1', center);
+            minuteLine.setAttribute('y1', center);
+            minuteLine.setAttribute('x2', center);
+            minuteLine.setAttribute('y2', center - radius * 0.75);
+            minuteLine.setAttribute('stroke', 'white');
+            minuteLine.setAttribute('stroke-width', size * 0.02);
+            minuteLine.setAttribute('stroke-linecap', 'round');
+            minuteHand.appendChild(minuteLine);
             svg.appendChild(minuteHand);
 
             // Center dot
@@ -502,43 +545,172 @@
         function initializeClockBackground() {
             const container = document.getElementById('clockBackground');
             const clocks = [];
+            const arrows = [];
 
             const clockConfigs = [
-                { size: 300, x: '5%', y: '10%', speed: 1 },
-                { size: 400, x: '70%', y: '20%', speed: 1.5 },
-                { size: 250, x: '45%', y: '55%', speed: 0.8 },
-                { size: 350, x: '15%', y: '70%', speed: 1.2 },
-                { size: 200, x: '80%', y: '60%', speed: 0.6 },
-                { size: 450, x: '35%', y: '35%', speed: 2 },
-                { size: 320, x: '60%', y: '80%', speed: 1.1 },
-                { size: 280, x: '25%', y: '45%', speed: 0.9 }
+                { size: 300, x: '5%', y: '10%', depth: 0.3, hourSpeed: 0.5, minuteSpeed: 6, depthClass: 'far' },
+                { size: 400, x: '70%', y: '15%', depth: 0.7, hourSpeed: 0.9, minuteSpeed: 11, depthClass: 'close' },
+                { size: 250, x: '45%', y: '50%', depth: 0.15, hourSpeed: 0.3, minuteSpeed: 4, depthClass: 'far' },
+                { size: 350, x: '15%', y: '65%', depth: 0.5, hourSpeed: 0.6, minuteSpeed: 7.5, depthClass: 'medium' },
+                { size: 200, x: '80%', y: '55%', depth: 0.2, hourSpeed: 0.4, minuteSpeed: 5, depthClass: 'far' },
+                { size: 450, x: '35%', y: '30%', depth: 0.9, hourSpeed: 1.2, minuteSpeed: 14, depthClass: 'close' },
+                { size: 320, x: '60%', y: '75%', depth: 0.4, hourSpeed: 0.55, minuteSpeed: 6.5, depthClass: 'medium' },
+                { size: 280, x: '25%', y: '40%', depth: 0.35, hourSpeed: 0.5, minuteSpeed: 6, depthClass: 'medium' },
+                { size: 360, x: '85%', y: '25%', depth: 0.6, hourSpeed: 0.8, minuteSpeed: 9, depthClass: 'close' },
+                { size: 220, x: '10%', y: '85%', depth: 0.25, hourSpeed: 0.35, minuteSpeed: 4.5, depthClass: 'far' },
+                { size: 380, x: '55%', y: '10%', depth: 0.65, hourSpeed: 0.85, minuteSpeed: 10, depthClass: 'close' },
+                { size: 270, x: '40%', y: '90%', depth: 0.3, hourSpeed: 0.45, minuteSpeed: 5.5, depthClass: 'medium' },
+                { size: 310, x: '75%', y: '85%', depth: 0.45, hourSpeed: 0.6, minuteSpeed: 7, depthClass: 'medium' },
+                { size: 240, x: '20%', y: '25%', depth: 0.2, hourSpeed: 0.35, minuteSpeed: 4.2, depthClass: 'far' },
+                { size: 340, x: '90%', y: '70%', depth: 0.55, hourSpeed: 0.7, minuteSpeed: 8.5, depthClass: 'medium' }
             ];
 
-            clockConfigs.forEach(config => {
+            const arrowConfigs = [
+                { from: 0, to: 7 },
+                { from: 5, to: 1 },
+                { from: 3, to: 6 },
+                { from: 10, to: 8 },
+                { from: 7, to: 4 },
+                { from: 1, to: 10 }
+            ];
+
+            clockConfigs.forEach((config, index) => {
                 const clockDiv = document.createElement('div');
-                clockDiv.className = 'clock';
+                clockDiv.className = `clock ${config.depthClass}`;
                 clockDiv.style.width = config.size + 'px';
                 clockDiv.style.height = config.size + 'px';
                 clockDiv.style.left = config.x;
                 clockDiv.style.top = config.y;
 
-                const svg = createClockSVG(config.size);
+                const svg = createClockSVG(config.size, index);
                 clockDiv.appendChild(svg);
                 container.appendChild(clockDiv);
 
                 clocks.push({
                     element: clockDiv,
-                    speed: config.speed
+                    id: index,
+                    size: config.size,
+                    depth: config.depth,
+                    hourSpeed: config.hourSpeed,
+                    minuteSpeed: config.minuteSpeed,
+                    x: parseFloat(config.x),
+                    y: parseFloat(config.y)
+                });
+            });
+
+            function createArrow(from, to) {
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.setAttribute('class', 'clock-arrow');
+                svg.style.position = 'absolute';
+                svg.style.top = '0';
+                svg.style.left = '0';
+                svg.style.width = '100%';
+                svg.style.height = '100%';
+                svg.style.pointerEvents = 'none';
+
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('id', `arrow-line-${from}-${to}`);
+
+                const arrowhead = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+                arrowhead.setAttribute('id', `arrow-head-${from}-${to}`);
+
+                svg.appendChild(line);
+                svg.appendChild(arrowhead);
+
+                return svg;
+            }
+
+            arrowConfigs.forEach(config => {
+                const arrowSvg = createArrow(config.from, config.to);
+                container.appendChild(arrowSvg);
+                arrows.push({
+                    element: arrowSvg,
+                    from: config.from,
+                    to: config.to,
+                    depth: (clocks[config.from].depth + clocks[config.to].depth) / 2
                 });
             });
 
             let ticking = false;
             function updateClocks() {
                 const scrollPercent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+                const scrollY = window.scrollY;
+                const viewportHeight = window.innerHeight;
+                const viewportWidth = window.innerWidth;
 
                 clocks.forEach(clock => {
-                    const rotation = scrollPercent * 360 * clock.speed;
-                    clock.element.style.transform = `rotate(${rotation}deg)`;
+                    // Parallax: closer objects (higher depth) move MORE in OPPOSITE direction
+                    const parallaxY = -scrollY * clock.depth * 0.3;
+                    const parallaxX = -scrollY * clock.depth * 0.05;
+
+                    clock.element.style.transform = `translate(${parallaxX}px, ${parallaxY}px)`;
+
+                    // Store actual positions for arrow calculations
+                    const rect = clock.element.getBoundingClientRect();
+                    clock.currentX = rect.left + clock.size / 2;
+                    clock.currentY = rect.top + clock.size / 2;
+
+                    const hourHand = document.getElementById(`hour-hand-${clock.id}`);
+                    const minuteHand = document.getElementById(`minute-hand-${clock.id}`);
+
+                    if (hourHand && minuteHand) {
+                        const hourRotation = scrollPercent * 360 * clock.hourSpeed;
+                        const minuteRotation = scrollPercent * 360 * clock.minuteSpeed;
+
+                        hourHand.setAttribute('transform', `rotate(${hourRotation})`);
+                        minuteHand.setAttribute('transform', `rotate(${minuteRotation})`);
+                    }
+                });
+
+                // Update arrows
+                arrows.forEach(arrow => {
+                    const fromClock = clocks[arrow.from];
+                    const toClock = clocks[arrow.to];
+
+                    if (fromClock.currentX && toClock.currentX) {
+                        const line = document.getElementById(`arrow-line-${arrow.from}-${arrow.to}`);
+                        const arrowhead = document.getElementById(`arrow-head-${arrow.from}-${arrow.to}`);
+
+                        const x1 = fromClock.currentX;
+                        const y1 = fromClock.currentY;
+                        const x2 = toClock.currentX;
+                        const y2 = toClock.currentY;
+
+                        // Calculate arrow direction
+                        const dx = x2 - x1;
+                        const dy = y2 - y1;
+                        const angle = Math.atan2(dy, dx);
+                        const length = Math.sqrt(dx * dx + dy * dy);
+
+                        // Shorten line to not overlap clock faces
+                        const offset = 50;
+                        const x1adj = x1 + offset * Math.cos(angle);
+                        const y1adj = y1 + offset * Math.sin(angle);
+                        const x2adj = x2 - offset * Math.cos(angle);
+                        const y2adj = y2 - offset * Math.sin(angle);
+
+                        line.setAttribute('x1', x1adj);
+                        line.setAttribute('y1', y1adj);
+                        line.setAttribute('x2', x2adj);
+                        line.setAttribute('y2', y2adj);
+
+                        // Create large arrowhead
+                        const arrowSize = 25;
+                        const arrowAngle = Math.PI / 6;
+
+                        const tip = { x: x2adj, y: y2adj };
+                        const base1 = {
+                            x: tip.x - arrowSize * Math.cos(angle - arrowAngle),
+                            y: tip.y - arrowSize * Math.sin(angle - arrowAngle)
+                        };
+                        const base2 = {
+                            x: tip.x - arrowSize * Math.cos(angle + arrowAngle),
+                            y: tip.y - arrowSize * Math.sin(angle + arrowAngle)
+                        };
+
+                        arrowhead.setAttribute('points',
+                            `${tip.x},${tip.y} ${base1.x},${base1.y} ${base2.x},${base2.y}`);
+                    }
                 });
 
                 ticking = false;
