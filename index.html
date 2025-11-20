@@ -672,12 +672,17 @@
                 });
             });
 
+            // Store initial positions once
+            clocks.forEach(clock => {
+                const rect = clock.element.getBoundingClientRect();
+                clock.baseX = rect.left + clock.size / 2;
+                clock.baseY = rect.top + clock.size / 2;
+            });
+
             let ticking = false;
             function updateClocks() {
                 const scrollPercent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
                 const scrollY = window.scrollY;
-                const viewportHeight = window.innerHeight;
-                const viewportWidth = window.innerWidth;
 
                 clocks.forEach(clock => {
                     // Parallax: closer objects (higher depth) move MORE in OPPOSITE direction
@@ -685,10 +690,9 @@
 
                     clock.element.style.transform = `translateY(${parallaxY}px)`;
 
-                    // Store actual positions for arrow calculations
-                    const rect = clock.element.getBoundingClientRect();
-                    clock.currentX = rect.left + clock.size / 2;
-                    clock.currentY = rect.top + clock.size / 2;
+                    // Calculate current position from base + parallax (same as visual position)
+                    clock.currentX = clock.baseX;
+                    clock.currentY = clock.baseY + parallaxY;
 
                     const hourHand = document.getElementById(`hour-hand-${clock.id}`);
                     const minuteHand = document.getElementById(`minute-hand-${clock.id}`);
