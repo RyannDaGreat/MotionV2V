@@ -68,12 +68,10 @@
         .clock-arrow {
             position: absolute;
             pointer-events: none;
-            opacity: 0.3;
         }
 
         .clock-arrow line {
             stroke: white;
-            stroke-width: 3;
         }
 
         .clock-arrow polygon {
@@ -607,6 +605,16 @@
             const clocks = [];
             const arrows = [];
 
+            // === UNIVERSAL 3D DEPTH CONSTANTS ===
+            // These control how depth affects all 3D parallax effects
+            const DEPTH_SCALE_MIN = 0.3;   // Minimum depth scale for far objects
+            const DEPTH_SCALE_MAX = 1.0;   // Maximum depth scale for close objects
+            const DASH_FREQUENCY = 20;     // Pixels per dash (lower = more dashes)
+            const PARALLAX_STRENGTH = 0.8; // How much objects move with scroll
+
+            // Universal depth scale function
+            const getDepthScale = (depth) => DEPTH_SCALE_MIN + (depth * (DEPTH_SCALE_MAX - DEPTH_SCALE_MIN));
+
             // Clocks positioned to span the entire scrollable height
             // Higher y% values compensate for parallax movement
             const clockConfigs = [
@@ -689,12 +697,21 @@
                 const arrowSvg = createArrow(config.from, config.to);
                 const avgDepth = (clocks[config.from].depth + clocks[config.to].depth) / 2;
 
-                // Apply blur based on average depth of connected clocks
+                // Apply blur and opacity based on average depth of connected clocks
+                // Closer arrows (higher depth) = less blur, more opacity
+                // Farther arrows (lower depth) = more blur, less opacity
                 let blurAmount = 4;
-                if (avgDepth > 0.6) blurAmount = 1.5;
-                else if (avgDepth > 0.35) blurAmount = 3;
+                let arrowOpacity = 0.15;
+                if (avgDepth > 0.6) {
+                    blurAmount = 1.5;
+                    arrowOpacity = 0.4;
+                } else if (avgDepth > 0.35) {
+                    blurAmount = 3;
+                    arrowOpacity = 0.25;
+                }
 
                 arrowSvg.style.filter = `blur(${blurAmount}px)`;
+                arrowSvg.style.opacity = arrowOpacity;
 
                 container.appendChild(arrowSvg);
                 arrows.push({
@@ -712,6 +729,23 @@
                 clock.baseY = rect.top + clock.size / 2;
             });
 
+            // Calculate fixed dash count for each arrow based on initial 3D distance
+            arrows.forEach(arrow => {
+                const fromClock = clocks[arrow.from];
+                const toClock = clocks[arrow.to];
+
+                const dx = toClock.baseX - fromClock.baseX;
+                const dy = toClock.baseY - fromClock.baseY;
+                const baseLength = Math.sqrt(dx * dx + dy * dy);
+
+                // Calculate perceived 3D length using universal depth scale
+                const depthScale = getDepthScale(arrow.depth);
+                const perceived3DLength = baseLength * depthScale;
+
+                // Store fixed number of dashes based on initial distance
+                arrow.numDashes = Math.max(3, Math.round(perceived3DLength / DASH_FREQUENCY));
+            });
+
             let ticking = false;
             function updateClocks() {
                 const scrollPercent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
@@ -719,7 +753,7 @@
 
                 clocks.forEach(clock => {
                     // Parallax: closer objects (higher depth) move MORE in OPPOSITE direction
-                    const parallaxY = -scrollY * clock.depth * 0.8;
+                    const parallaxY = -scrollY * clock.depth * PARALLAX_STRENGTH;
 
                     clock.element.style.transform = `translateY(${parallaxY}px)`;
 
@@ -771,8 +805,18 @@
                         line.setAttribute('x2', x2adj);
                         line.setAttribute('y2', y2adj);
 
-                        // Create large arrowhead
-                        const arrowSize = 25;
+                        // Use fixed number of dashes (calculated once at init)
+                        // Dash size scales with current length, but count stays constant
+                        const dashLength = (length - 100) / (arrow.numDashes * 1.5); // 100 for offsets
+                        const gapLength = dashLength * 0.5;
+                        line.setAttribute('stroke-dasharray', `${dashLength},${gapLength}`);
+
+                        // Stroke width based on depth (closer = thicker)
+                        const strokeWidth = arrow.depth > 0.6 ? 4 : arrow.depth > 0.35 ? 3 : 2;
+                        line.setAttribute('stroke-width', strokeWidth);
+
+                        // Create arrowhead with size based on depth
+                        const arrowSize = arrow.depth > 0.6 ? 30 : arrow.depth > 0.35 ? 25 : 20;
                         const arrowAngle = Math.PI / 6;
 
                         const tip = { x: x2adj, y: y2adj };
