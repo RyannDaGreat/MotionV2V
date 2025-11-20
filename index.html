@@ -574,22 +574,24 @@
             const clocks = [];
             const arrows = [];
 
+            // Clocks positioned to span the entire scrollable height
+            // Higher y% values compensate for parallax movement
             const clockConfigs = [
-                { size: 300, x: '5%', y: '10%', depth: 0.3, hourSpeed: 0.5, minuteSpeed: 6, depthClass: 'far', hourOffset: 45, minuteOffset: 120 },
-                { size: 400, x: '70%', y: '15%', depth: 0.7, hourSpeed: 0.9, minuteSpeed: 11, depthClass: 'close', hourOffset: 180, minuteOffset: 270 },
-                { size: 250, x: '45%', y: '50%', depth: 0.15, hourSpeed: 0.3, minuteSpeed: 4, depthClass: 'far', hourOffset: 90, minuteOffset: 45 },
-                { size: 350, x: '15%', y: '65%', depth: 0.5, hourSpeed: 0.6, minuteSpeed: 7.5, depthClass: 'medium', hourOffset: 270, minuteOffset: 180 },
+                { size: 300, x: '5%', y: '5%', depth: 0.3, hourSpeed: 0.5, minuteSpeed: 6, depthClass: 'far', hourOffset: 45, minuteOffset: 120 },
+                { size: 400, x: '70%', y: '10%', depth: 0.7, hourSpeed: 0.9, minuteSpeed: 11, depthClass: 'close', hourOffset: 180, minuteOffset: 270 },
+                { size: 250, x: '45%', y: '25%', depth: 0.15, hourSpeed: 0.3, minuteSpeed: 4, depthClass: 'far', hourOffset: 90, minuteOffset: 45 },
+                { size: 350, x: '15%', y: '40%', depth: 0.5, hourSpeed: 0.6, minuteSpeed: 7.5, depthClass: 'medium', hourOffset: 270, minuteOffset: 180 },
                 { size: 200, x: '80%', y: '55%', depth: 0.2, hourSpeed: 0.4, minuteSpeed: 5, depthClass: 'far', hourOffset: 30, minuteOffset: 310 },
-                { size: 450, x: '35%', y: '30%', depth: 0.9, hourSpeed: 1.2, minuteSpeed: 14, depthClass: 'close', hourOffset: 210, minuteOffset: 150 },
-                { size: 320, x: '60%', y: '75%', depth: 0.4, hourSpeed: 0.55, minuteSpeed: 6.5, depthClass: 'medium', hourOffset: 120, minuteOffset: 90 },
-                { size: 280, x: '25%', y: '40%', depth: 0.35, hourSpeed: 0.5, minuteSpeed: 6, depthClass: 'medium', hourOffset: 60, minuteOffset: 240 },
-                { size: 360, x: '85%', y: '25%', depth: 0.6, hourSpeed: 0.8, minuteSpeed: 9, depthClass: 'close', hourOffset: 315, minuteOffset: 30 },
-                { size: 220, x: '10%', y: '85%', depth: 0.25, hourSpeed: 0.35, minuteSpeed: 4.5, depthClass: 'far', hourOffset: 15, minuteOffset: 200 },
-                { size: 380, x: '55%', y: '10%', depth: 0.65, hourSpeed: 0.85, minuteSpeed: 10, depthClass: 'close', hourOffset: 240, minuteOffset: 330 },
-                { size: 270, x: '40%', y: '90%', depth: 0.3, hourSpeed: 0.45, minuteSpeed: 5.5, depthClass: 'medium', hourOffset: 135, minuteOffset: 60 },
-                { size: 310, x: '75%', y: '85%', depth: 0.45, hourSpeed: 0.6, minuteSpeed: 7, depthClass: 'medium', hourOffset: 300, minuteOffset: 285 },
-                { size: 240, x: '20%', y: '25%', depth: 0.2, hourSpeed: 0.35, minuteSpeed: 4.2, depthClass: 'far', hourOffset: 75, minuteOffset: 135 },
-                { size: 340, x: '90%', y: '70%', depth: 0.55, hourSpeed: 0.7, minuteSpeed: 8.5, depthClass: 'medium', hourOffset: 195, minuteOffset: 225 }
+                { size: 450, x: '35%', y: '70%', depth: 0.9, hourSpeed: 1.2, minuteSpeed: 14, depthClass: 'close', hourOffset: 210, minuteOffset: 150 },
+                { size: 320, x: '60%', y: '85%', depth: 0.4, hourSpeed: 0.55, minuteSpeed: 6.5, depthClass: 'medium', hourOffset: 120, minuteOffset: 90 },
+                { size: 280, x: '25%', y: '100%', depth: 0.35, hourSpeed: 0.5, minuteSpeed: 6, depthClass: 'medium', hourOffset: 60, minuteOffset: 240 },
+                { size: 360, x: '85%', y: '120%', depth: 0.6, hourSpeed: 0.8, minuteSpeed: 9, depthClass: 'close', hourOffset: 315, minuteOffset: 30 },
+                { size: 220, x: '10%', y: '140%', depth: 0.25, hourSpeed: 0.35, minuteSpeed: 4.5, depthClass: 'far', hourOffset: 15, minuteOffset: 200 },
+                { size: 380, x: '55%', y: '160%', depth: 0.65, hourSpeed: 0.85, minuteSpeed: 10, depthClass: 'close', hourOffset: 240, minuteOffset: 330 },
+                { size: 270, x: '40%', y: '180%', depth: 0.3, hourSpeed: 0.45, minuteSpeed: 5.5, depthClass: 'medium', hourOffset: 135, minuteOffset: 60 },
+                { size: 310, x: '75%', y: '200%', depth: 0.45, hourSpeed: 0.6, minuteSpeed: 7, depthClass: 'medium', hourOffset: 300, minuteOffset: 285 },
+                { size: 240, x: '20%', y: '220%', depth: 0.2, hourSpeed: 0.35, minuteSpeed: 4.2, depthClass: 'far', hourOffset: 75, minuteOffset: 135 },
+                { size: 340, x: '90%', y: '240%', depth: 0.55, hourSpeed: 0.7, minuteSpeed: 8.5, depthClass: 'medium', hourOffset: 195, minuteOffset: 225 }
             ];
 
             const arrowConfigs = [
@@ -679,10 +681,9 @@
 
                 clocks.forEach(clock => {
                     // Parallax: closer objects (higher depth) move MORE in OPPOSITE direction
-                    const parallaxY = -scrollY * clock.depth * 0.3;
-                    const parallaxX = -scrollY * clock.depth * 0.05;
+                    const parallaxY = -scrollY * clock.depth * 0.8;
 
-                    clock.element.style.transform = `translate(${parallaxX}px, ${parallaxY}px)`;
+                    clock.element.style.transform = `translateY(${parallaxY}px)`;
 
                     // Store actual positions for arrow calculations
                     const rect = clock.element.getBoundingClientRect();
