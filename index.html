@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Motion Editing Video Comparisons</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         @font-face {
             font-family: 'Futura';
@@ -41,16 +40,6 @@
             pointer-events: none;
             z-index: 0;
             overflow: hidden;
-        }
-
-        #three-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
         }
 
         .clock {
@@ -93,24 +82,6 @@
 
         .clock svg {
             display: block;
-        }
-
-        .film-strip {
-            position: absolute;
-            pointer-events: none;
-            opacity: 0.15;
-            filter: blur(1px);
-            mix-blend-mode: screen;
-        }
-
-        .film-strip.far {
-            opacity: 0.1;
-            filter: blur(2px);
-        }
-
-        .film-strip.close {
-            opacity: 0.2;
-            filter: blur(0.5px);
         }
 
         .container {
@@ -307,7 +278,6 @@
     </style>
 </head>
 <body>
-    <canvas id="three-canvas"></canvas>
     <div class="debug-toggle" id="debugToggle">Hide Panels (Debug)</div>
     <div class="clock-background" id="clockBackground"></div>
 
@@ -327,10 +297,6 @@
         </div>
 
         <div id="video-containers"></div>
-
-        <footer>
-            <p>Motion Editing Comparison Gallery</p>
-        </footer>
     </div>
 
     <script>
@@ -519,116 +485,6 @@
             });
         }
 
-        function createFilmStripSVG(width, height, frames, id) {
-            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-            svg.setAttribute('width', width);
-            svg.setAttribute('height', height);
-            svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
-
-            // Define gradients for 3D shading
-            const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
-
-            // Main film gradient (dark to light for 3D effect)
-            const filmGradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
-            filmGradient.setAttribute('id', `film-gradient-${id}`);
-            filmGradient.setAttribute('x1', '0%');
-            filmGradient.setAttribute('y1', '0%');
-            filmGradient.setAttribute('x2', '100%');
-            filmGradient.setAttribute('y2', '0%');
-
-            const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-            stop1.setAttribute('offset', '0%');
-            stop1.setAttribute('style', 'stop-color:rgb(150,150,150);stop-opacity:1');
-
-            const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-            stop2.setAttribute('offset', '50%');
-            stop2.setAttribute('style', 'stop-color:rgb(220,220,220);stop-opacity:1');
-
-            const stop3 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-            stop3.setAttribute('offset', '100%');
-            stop3.setAttribute('style', 'stop-color:rgb(150,150,150);stop-opacity:1');
-
-            filmGradient.appendChild(stop1);
-            filmGradient.appendChild(stop2);
-            filmGradient.appendChild(stop3);
-            defs.appendChild(filmGradient);
-
-            // Hole gradient for depth
-            const holeGradient = document.createElementNS('http://www.w3.org/2000/svg', 'radialGradient');
-            holeGradient.setAttribute('id', `hole-gradient-${id}`);
-            const holeStop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-            holeStop1.setAttribute('offset', '0%');
-            holeStop1.setAttribute('style', 'stop-color:rgb(40,40,40);stop-opacity:1');
-            const holeStop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
-            holeStop2.setAttribute('offset', '100%');
-            holeStop2.setAttribute('style', 'stop-color:rgb(80,80,80);stop-opacity:1');
-            holeGradient.appendChild(holeStop1);
-            holeGradient.appendChild(holeStop2);
-            defs.appendChild(holeGradient);
-
-            svg.appendChild(defs);
-
-            const perfWidth = width * 0.08;
-            const frameWidth = width - (perfWidth * 2);
-            const frameHeight = height / frames;
-
-            // Main film strip body
-            const filmBody = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-            filmBody.setAttribute('x', 0);
-            filmBody.setAttribute('y', 0);
-            filmBody.setAttribute('width', width);
-            filmBody.setAttribute('height', height);
-            filmBody.setAttribute('fill', `url(#film-gradient-${id})`);
-            filmBody.setAttribute('stroke', 'rgb(100,100,100)');
-            filmBody.setAttribute('stroke-width', '2');
-            svg.appendChild(filmBody);
-
-            // Create frames and perforations
-            for (let i = 0; i < frames; i++) {
-                const frameY = i * frameHeight;
-
-                // Frame area (darker)
-                const frame = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-                frame.setAttribute('x', perfWidth);
-                frame.setAttribute('y', frameY + frameHeight * 0.1);
-                frame.setAttribute('width', frameWidth);
-                frame.setAttribute('height', frameHeight * 0.8);
-                frame.setAttribute('fill', 'rgb(60,60,60)');
-                frame.setAttribute('stroke', 'rgb(40,40,40)');
-                frame.setAttribute('stroke-width', '1');
-                svg.appendChild(frame);
-
-                // Perforations on left side
-                const perfsPerFrame = 3;
-                for (let p = 0; p < perfsPerFrame; p++) {
-                    const perfY = frameY + (frameHeight / (perfsPerFrame + 1)) * (p + 1);
-                    const perfSize = perfWidth * 0.4;
-
-                    // Left perforations
-                    const leftPerf = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-                    leftPerf.setAttribute('x', perfWidth * 0.3);
-                    leftPerf.setAttribute('y', perfY - perfSize / 2);
-                    leftPerf.setAttribute('width', perfSize);
-                    leftPerf.setAttribute('height', perfSize);
-                    leftPerf.setAttribute('rx', perfSize * 0.2);
-                    leftPerf.setAttribute('fill', `url(#hole-gradient-${id})`);
-                    svg.appendChild(leftPerf);
-
-                    // Right perforations
-                    const rightPerf = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-                    rightPerf.setAttribute('x', width - perfWidth * 0.3 - perfSize);
-                    rightPerf.setAttribute('y', perfY - perfSize / 2);
-                    rightPerf.setAttribute('width', perfSize);
-                    rightPerf.setAttribute('height', perfSize);
-                    rightPerf.setAttribute('rx', perfSize * 0.2);
-                    rightPerf.setAttribute('fill', `url(#hole-gradient-${id})`);
-                    svg.appendChild(rightPerf);
-                }
-            }
-
-            return svg;
-        }
-
         function createClockSVG(size, id) {
             const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
             svg.setAttribute('width', size);
@@ -709,7 +565,6 @@
             const container = document.getElementById('clockBackground');
             const clocks = [];
             const arrows = [];
-            const filmStrips = [];
 
             // Clocks positioned to span the entire scrollable height
             // Higher y% values compensate for parallax movement
@@ -738,71 +593,6 @@
                 { from: 10, to: 8 },
                 { from: 7, to: 4 },
                 { from: 1, to: 10 }
-            ];
-
-            // Bezier curve helper functions
-            function cubicBezier(t, p0, p1, p2, p3) {
-                const u = 1 - t;
-                const tt = t * t;
-                const uu = u * u;
-                const uuu = uu * u;
-                const ttt = tt * t;
-
-                return {
-                    x: uuu * p0.x + 3 * uu * t * p1.x + 3 * u * tt * p2.x + ttt * p3.x,
-                    y: uuu * p0.y + 3 * uu * t * p1.y + 3 * u * tt * p2.y + ttt * p3.y
-                };
-            }
-
-            function bezierTangent(t, p0, p1, p2, p3) {
-                const u = 1 - t;
-                const uu = u * u;
-                const tt = t * t;
-
-                const dx = -3 * uu * p0.x + 3 * uu * p1.x - 6 * u * t * p1.x + 6 * u * t * p2.x - 3 * tt * p2.x + 3 * tt * p3.x;
-                const dy = -3 * uu * p0.y + 3 * uu * p1.y - 6 * u * t * p1.y + 6 * u * t * p2.y - 3 * tt * p2.y + 3 * tt * p3.y;
-
-                return Math.atan2(dy, dx) * 180 / Math.PI;
-            }
-
-            const filmStripConfigs = [
-                {
-                    width: 100, height: 400, frames: 4, depth: 0.4, twist: 5, depthClass: 'close',
-                    path: [
-                        { x: 10, y: 20 }, { x: 5, y: 80 }, { x: 20, y: 140 }, { x: 15, y: 200 }
-                    ]
-                },
-                {
-                    width: 80, height: 500, frames: 5, depth: 0.2, twist: -8, depthClass: 'far',
-                    path: [
-                        { x: 70, y: 10 }, { x: 85, y: 60 }, { x: 55, y: 110 }, { x: 65, y: 160 }
-                    ]
-                },
-                {
-                    width: 90, height: 350, frames: 4, depth: 0.5, twist: 10, depthClass: 'close',
-                    path: [
-                        { x: 90, y: 30 }, { x: 75, y: 90 }, { x: 95, y: 150 }, { x: 88, y: 210 }
-                    ]
-                },
-                {
-                    width: 85, height: 450, frames: 5, depth: 0.3, twist: -6, depthClass: 'far',
-                    path: [
-                        { x: 25, y: 60 }, { x: 45, y: 120 }, { x: 15, y: 180 }, { x: 30, y: 240 }
-                    ]
-                },
-                {
-                    width: 95, height: 380, frames: 4, depth: 0.6, twist: 12, depthClass: 'close',
-                    path: [
-                        { x: 50, y: 100 }, { x: 35, y: 160 }, { x: 65, y: 220 }, { x: 50, y: 100 }
-                    ],
-                    loop: true
-                },
-                {
-                    width: 75, height: 420, frames: 5, depth: 0.25, twist: -7, depthClass: 'far',
-                    path: [
-                        { x: 5, y: 140 }, { x: 20, y: 200 }, { x: 8, y: 260 }, { x: 12, y: 320 }
-                    ]
-                }
             ];
 
             clockConfigs.forEach((config, index) => {
@@ -853,8 +643,6 @@
 
                 return svg;
             }
-
-            // Film strips now handled by Three.js 3D ribbons
 
             arrowConfigs.forEach(config => {
                 const arrowSvg = createArrow(config.from, config.to);
@@ -909,8 +697,6 @@
                         minuteHand.setAttribute('transform', `rotate(${minuteRotation})`);
                     }
                 });
-
-                // SVG film strips removed - using 3D ribbons instead
 
                 // Update arrows
                 arrows.forEach(arrow => {
@@ -977,213 +763,9 @@
             updateClocks();
         }
 
-        // Three.js 3D Film Strips
-        function initialize3DFilmStrips() {
-            const canvas = document.getElementById('three-canvas');
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 5000);
-            camera.position.z = 1000;
-
-            const renderer = new THREE.WebGLRenderer({
-                canvas: canvas,
-                alpha: true,
-                antialias: true
-            });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setClearColor(0x000000, 0);
-
-            const filmStrips3D = [];
-
-            // Create film strip texture/material
-            function createFilmStripMaterial() {
-                const canvas2d = document.createElement('canvas');
-                canvas2d.width = 256;
-                canvas2d.height = 1024;
-                const ctx = canvas2d.getContext('2d');
-
-                // Gray film background with gradient
-                const gradient = ctx.createLinearGradient(0, 0, 256, 0);
-                gradient.addColorStop(0, '#888');
-                gradient.addColorStop(0.5, '#ccc');
-                gradient.addColorStop(1, '#888');
-                ctx.fillStyle = gradient;
-                ctx.fillRect(0, 0, 256, 1024);
-
-                // Draw perforations
-                const perfWidth = 20;
-                const frameHeight = 256;
-                for (let i = 0; i < 4; i++) {
-                    const frameY = i * frameHeight;
-
-                    // Dark frame
-                    ctx.fillStyle = '#333';
-                    ctx.fillRect(perfWidth, frameY + 20, 256 - perfWidth * 2, frameHeight - 40);
-
-                    // Perforations
-                    for (let p = 0; p < 3; p++) {
-                        const perfY = frameY + (frameHeight / 4) * (p + 1);
-                        ctx.fillStyle = '#222';
-                        ctx.fillRect(5, perfY - 8, 15, 16);
-                        ctx.fillRect(236, perfY - 8, 15, 16);
-                    }
-                }
-
-                const texture = new THREE.CanvasTexture(canvas2d);
-                texture.wrapS = THREE.RepeatWrapping;
-                texture.wrapT = THREE.RepeatWrapping;
-
-                return new THREE.MeshStandardMaterial({
-                    map: texture,
-                    side: THREE.DoubleSide,
-                    transparent: true,
-                    opacity: 0.3,
-                    metalness: 0.3,
-                    roughness: 0.7
-                });
-            }
-
-            // Add lights
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-            scene.add(ambientLight);
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.4);
-            directionalLight.position.set(100, 100, 100);
-            scene.add(directionalLight);
-
-            // Create curved film strip paths
-            const filmStripPaths = [
-                {
-                    curve: new THREE.CubicBezierCurve3(
-                        new THREE.Vector3(-400, 200, -200),
-                        new THREE.Vector3(-200, -100, 100),
-                        new THREE.Vector3(100, -200, -100),
-                        new THREE.Vector3(300, 100, 200)
-                    ),
-                    width: 40,
-                    depth: 0.4
-                },
-                {
-                    curve: new THREE.CubicBezierCurve3(
-                        new THREE.Vector3(400, -150, -100),
-                        new THREE.Vector3(200, 100, 200),
-                        new THREE.Vector3(-100, 150, -150),
-                        new THREE.Vector3(-350, -100, 100)
-                    ),
-                    width: 35,
-                    depth: 0.2
-                },
-                {
-                    curve: new THREE.CubicBezierCurve3(
-                        new THREE.Vector3(450, 300, 0),
-                        new THREE.Vector3(200, -200, 150),
-                        new THREE.Vector3(-200, 200, -150),
-                        new THREE.Vector3(-450, -250, 50)
-                    ),
-                    width: 38,
-                    depth: 0.5
-                },
-                {
-                    curve: new THREE.CubicBezierCurve3(
-                        new THREE.Vector3(-300, -250, 100),
-                        new THREE.Vector3(0, 150, -200),
-                        new THREE.Vector3(200, -150, 200),
-                        new THREE.Vector3(400, 200, -100)
-                    ),
-                    width: 36,
-                    depth: 0.3
-                }
-            ];
-
-            filmStripPaths.forEach((pathData, index) => {
-                const material = createFilmStripMaterial();
-
-                // Get points along the curve
-                const points = pathData.curve.getPoints(100);
-
-                // Create ribbon geometry along the full curve path
-                const geometry = new THREE.BufferGeometry();
-                const vertices = [];
-                const uvs = [];
-                const indices = [];
-
-                const halfWidth = pathData.width / 2;
-
-                for (let i = 0; i < points.length; i++) {
-                    const point = points[i];
-                    const tangent = pathData.curve.getTangentAt(i / (points.length - 1));
-
-                    // Calculate perpendicular for ribbon width
-                    const up = new THREE.Vector3(0, 0, 1);
-                    const perpendicular = new THREE.Vector3().crossVectors(tangent, up).normalize();
-
-                    // Left and right vertices
-                    vertices.push(
-                        point.x - perpendicular.x * halfWidth,
-                        point.y - perpendicular.y * halfWidth,
-                        point.z - perpendicular.z * halfWidth
-                    );
-                    vertices.push(
-                        point.x + perpendicular.x * halfWidth,
-                        point.y + perpendicular.y * halfWidth,
-                        point.z + perpendicular.z * halfWidth
-                    );
-
-                    // UV coordinates - v goes along the length
-                    const v = i / (points.length - 1);
-                    uvs.push(0, v * 3); // Repeat texture 3 times along length
-                    uvs.push(1, v * 3);
-
-                    // Create triangles
-                    if (i < points.length - 1) {
-                        const base = i * 2;
-                        indices.push(base, base + 1, base + 2);
-                        indices.push(base + 1, base + 3, base + 2);
-                    }
-                }
-
-                geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-                geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
-                geometry.setIndex(indices);
-                geometry.computeVertexNormals();
-
-                const mesh = new THREE.Mesh(geometry, material);
-                scene.add(mesh);
-
-                filmStrips3D.push({
-                    mesh: mesh,
-                    curve: pathData.curve,
-                    depth: pathData.depth
-                });
-            });
-
-            // Animation loop
-            function animate3DFilmStrips() {
-                requestAnimationFrame(animate3DFilmStrips);
-
-                const scrollPercent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
-
-                filmStrips3D.forEach((strip, index) => {
-                    // Just move the texture! The mesh stays fixed on the curve
-                    const speed = 0.5 + index * 0.2;
-                    strip.mesh.material.map.offset.y = -(scrollPercent * speed * 5);
-                });
-
-                renderer.render(scene, camera);
-            }
-
-            animate3DFilmStrips();
-
-            // Handle window resize
-            window.addEventListener('resize', () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
             initializeGallery();
             initializeClockBackground();
-            initialize3DFilmStrips();
 
             // Debug toggle functionality
             const debugToggle = document.getElementById('debugToggle');
