@@ -27,11 +27,49 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .clock-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .clock {
+            position: absolute;
+            opacity: 0.12;
+            filter: blur(3px);
+            transition: transform 0.1s ease-out;
+            mix-blend-mode: screen;
+            transform-origin: center center;
+        }
+
+        .clock:nth-child(odd) {
+            filter: blur(4px);
+            opacity: 0.08;
+        }
+
+        .clock:nth-child(3n) {
+            filter: blur(5px);
+            opacity: 0.1;
+        }
+
+        .clock svg {
+            display: block;
         }
 
         .container {
             max-width: 1400px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
 
         header {
@@ -183,6 +221,8 @@
     </style>
 </head>
 <body>
+    <div class="clock-background" id="clockBackground"></div>
+
     <div class="container">
         <header>
             <h1>Motion Editing Comparisons</h1>
@@ -391,7 +431,134 @@
             });
         }
 
-        document.addEventListener('DOMContentLoaded', initializeGallery);
+        function createClockSVG(size) {
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('width', size);
+            svg.setAttribute('height', size);
+            svg.setAttribute('viewBox', `0 0 ${size} ${size}`);
+
+            const center = size / 2;
+            const radius = size * 0.45;
+
+            // Clock face circle
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', center);
+            circle.setAttribute('cy', center);
+            circle.setAttribute('r', radius);
+            circle.setAttribute('fill', 'none');
+            circle.setAttribute('stroke', 'white');
+            circle.setAttribute('stroke-width', size * 0.02);
+            svg.appendChild(circle);
+
+            // Hour markers
+            for (let i = 0; i < 12; i++) {
+                const angle = (i * 30 - 90) * Math.PI / 180;
+                const startRadius = radius * 0.85;
+                const endRadius = radius * 0.95;
+
+                const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                line.setAttribute('x1', center + startRadius * Math.cos(angle));
+                line.setAttribute('y1', center + startRadius * Math.sin(angle));
+                line.setAttribute('x2', center + endRadius * Math.cos(angle));
+                line.setAttribute('y2', center + endRadius * Math.sin(angle));
+                line.setAttribute('stroke', 'white');
+                line.setAttribute('stroke-width', size * 0.015);
+                svg.appendChild(line);
+            }
+
+            // Hour hand
+            const hourHand = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            hourHand.setAttribute('x1', center);
+            hourHand.setAttribute('y1', center);
+            hourHand.setAttribute('x2', center);
+            hourHand.setAttribute('y2', center - radius * 0.5);
+            hourHand.setAttribute('stroke', 'white');
+            hourHand.setAttribute('stroke-width', size * 0.025);
+            hourHand.setAttribute('stroke-linecap', 'round');
+            svg.appendChild(hourHand);
+
+            // Minute hand
+            const minuteHand = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            minuteHand.setAttribute('x1', center);
+            minuteHand.setAttribute('y1', center);
+            minuteHand.setAttribute('x2', center);
+            minuteHand.setAttribute('y2', center - radius * 0.75);
+            minuteHand.setAttribute('stroke', 'white');
+            minuteHand.setAttribute('stroke-width', size * 0.02);
+            minuteHand.setAttribute('stroke-linecap', 'round');
+            svg.appendChild(minuteHand);
+
+            // Center dot
+            const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            dot.setAttribute('cx', center);
+            dot.setAttribute('cy', center);
+            dot.setAttribute('r', size * 0.03);
+            dot.setAttribute('fill', 'white');
+            svg.appendChild(dot);
+
+            return svg;
+        }
+
+        function initializeClockBackground() {
+            const container = document.getElementById('clockBackground');
+            const clocks = [];
+
+            const clockConfigs = [
+                { size: 300, x: '5%', y: '10%', speed: 1 },
+                { size: 400, x: '70%', y: '20%', speed: 1.5 },
+                { size: 250, x: '45%', y: '55%', speed: 0.8 },
+                { size: 350, x: '15%', y: '70%', speed: 1.2 },
+                { size: 200, x: '80%', y: '60%', speed: 0.6 },
+                { size: 450, x: '35%', y: '35%', speed: 2 },
+                { size: 320, x: '60%', y: '80%', speed: 1.1 },
+                { size: 280, x: '25%', y: '45%', speed: 0.9 }
+            ];
+
+            clockConfigs.forEach(config => {
+                const clockDiv = document.createElement('div');
+                clockDiv.className = 'clock';
+                clockDiv.style.width = config.size + 'px';
+                clockDiv.style.height = config.size + 'px';
+                clockDiv.style.left = config.x;
+                clockDiv.style.top = config.y;
+
+                const svg = createClockSVG(config.size);
+                clockDiv.appendChild(svg);
+                container.appendChild(clockDiv);
+
+                clocks.push({
+                    element: clockDiv,
+                    speed: config.speed
+                });
+            });
+
+            let ticking = false;
+            function updateClocks() {
+                const scrollPercent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
+
+                clocks.forEach(clock => {
+                    const rotation = scrollPercent * 360 * clock.speed;
+                    clock.element.style.transform = `rotate(${rotation}deg)`;
+                });
+
+                ticking = false;
+            }
+
+            function requestTick() {
+                if (!ticking) {
+                    requestAnimationFrame(updateClocks);
+                    ticking = true;
+                }
+            }
+
+            window.addEventListener('scroll', requestTick);
+            updateClocks();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeGallery();
+            initializeClockBackground();
+        });
     </script>
 </body>
 </html>
