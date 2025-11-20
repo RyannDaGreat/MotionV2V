@@ -1096,26 +1096,62 @@
             filmStripPaths.forEach((pathData, index) => {
                 const material = createFilmStripMaterial();
 
-                // Create a SHORT ribbon segment (the "train")
-                const filmLength = 400; // Length of the film strip in 3D units
-                const segments = 40; // Number of segments for smooth bending
+                // Get points along the curve
+                const points = pathData.curve.getPoints(100);
 
-                const ribbonGeometry = new THREE.PlaneGeometry(
-                    pathData.width,
-                    filmLength,
-                    1,
-                    segments
-                );
+                // Create ribbon geometry along the full curve path
+                const geometry = new THREE.BufferGeometry();
+                const vertices = [];
+                const uvs = [];
+                const indices = [];
 
-                const mesh = new THREE.Mesh(ribbonGeometry, material);
+                const halfWidth = pathData.width / 2;
+
+                for (let i = 0; i < points.length; i++) {
+                    const point = points[i];
+                    const tangent = pathData.curve.getTangentAt(i / (points.length - 1));
+
+                    // Calculate perpendicular for ribbon width
+                    const up = new THREE.Vector3(0, 0, 1);
+                    const perpendicular = new THREE.Vector3().crossVectors(tangent, up).normalize();
+
+                    // Left and right vertices
+                    vertices.push(
+                        point.x - perpendicular.x * halfWidth,
+                        point.y - perpendicular.y * halfWidth,
+                        point.z - perpendicular.z * halfWidth
+                    );
+                    vertices.push(
+                        point.x + perpendicular.x * halfWidth,
+                        point.y + perpendicular.y * halfWidth,
+                        point.z + perpendicular.z * halfWidth
+                    );
+
+                    // UV coordinates - v goes along the length
+                    const v = i / (points.length - 1);
+                    uvs.push(0, v * 3); // Repeat texture 3 times along length
+                    uvs.push(1, v * 3);
+
+                    // Create triangles
+                    if (i < points.length - 1) {
+                        const base = i * 2;
+                        indices.push(base, base + 1, base + 2);
+                        indices.push(base + 1, base + 3, base + 2);
+                    }
+                }
+
+                geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+                geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+                geometry.setIndex(indices);
+                geometry.computeVertexNormals();
+
+                const mesh = new THREE.Mesh(geometry, material);
                 scene.add(mesh);
 
                 filmStrips3D.push({
                     mesh: mesh,
                     curve: pathData.curve,
-                    depth: pathData.depth,
-                    filmLength: filmLength,
-                    segments: segments
+                    depth: pathData.depth
                 });
             });
 
@@ -1126,55 +1162,9 @@
                 const scrollPercent = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight);
 
                 filmStrips3D.forEach((strip, index) => {
-                    // Calculate position along the curve (the "train" moves along the "rail")
-                    const speed = 0.3 + index * 0.1;
-                    const t = (scrollPercent * speed + index * 0.25) % 1;
-
-                    // Get curve length to properly distribute the film
-                    const curveLength = strip.curve.getLength();
-                    const samplesCount = strip.segments + 1;
-
-                    // Deform the ribbon to follow the curve
-                    const positionAttribute = strip.mesh.geometry.attributes.position;
-                    const array = positionAttribute.array;
-
-                    for (let i = 0; i < samplesCount; i++) {
-                        // Map this segment of the ribbon to a position along the curve
-                        const segmentT = i / (samplesCount - 1);
-
-                        // Calculate where this part of the film is on the curve
-                        const filmStart = t;
-                        const filmEnd = t + (strip.filmLength / curveLength);
-                        const curveT = filmStart + segmentT * (filmEnd - filmStart);
-                        const wrappedT = curveT % 1;
-
-                        // Get point and tangent on the curve
-                        const point = strip.curve.getPointAt(wrappedT);
-                        const tangent = strip.curve.getTangentAt(wrappedT);
-
-                        // Calculate perpendicular vector for the ribbon width
-                        const up = new THREE.Vector3(0, 0, 1);
-                        const perpendicular = new THREE.Vector3().crossVectors(tangent, up).normalize();
-
-                        // Update vertex positions (each row has 2 vertices - left and right edge)
-                        const leftIdx = i * 2 * 3; // x, y, z for left vertex
-                        const rightIdx = (i * 2 + 1) * 3; // x, y, z for right vertex
-
-                        const halfWidth = strip.mesh.geometry.parameters.width / 2;
-
-                        // Left edge
-                        array[leftIdx] = point.x - perpendicular.x * halfWidth;
-                        array[leftIdx + 1] = point.y - perpendicular.y * halfWidth;
-                        array[leftIdx + 2] = point.z - perpendicular.z * halfWidth;
-
-                        // Right edge
-                        array[rightIdx] = point.x + perpendicular.x * halfWidth;
-                        array[rightIdx + 1] = point.y + perpendicular.y * halfWidth;
-                        array[rightIdx + 2] = point.z + perpendicular.z * halfWidth;
-                    }
-
-                    positionAttribute.needsUpdate = true;
-                    strip.mesh.geometry.computeVertexNormals();
+                    // Just move the texture! The mesh stays fixed on the curve
+                    const speed = 0.5 + index * 0.2;
+                    strip.mesh.material.map.offset.y = -(scrollPercent * speed * 5);
                 });
 
                 renderer.render(scene, camera);
