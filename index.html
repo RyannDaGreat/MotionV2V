@@ -79,14 +79,14 @@
         }
 
         .video-info {
-            background-color: #f0f8ff;
             padding: 15px 25px;
             margin-bottom: 15px;
-            border-left: 4px solid #4CAF50;
+            background-color: #f8f9fa;
         }
 
         .video-info-item {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            line-height: 1.5;
         }
 
         .video-info-item:last-child {
@@ -94,9 +94,8 @@
         }
 
         .video-info-label {
-            font-weight: 700;
-            color: #333;
-            margin-right: 8px;
+            font-weight: 600;
+            color: #555;
         }
 
         .video-wrapper {
@@ -213,25 +212,7 @@
         const CAPTION_EXTEND_ABOVE_PERCENT = 3; // How much caption extends above video
         const CAPTION_TOTAL_HEIGHT_PERCENT = CAPTION_OVERLAP_PERCENT + CAPTION_EXTEND_ABOVE_PERCENT;
 
-        const videos = [
-            'assets/comparison_videos/0123><ATI_0000--[Seed 8464] Blacks Freeze Camera.mp4',
-            'assets/comparison_videos/0123><ATI_0008--[Seed 6227] Boat_ Move Test.mp4',
-            'assets/comparison_videos/0123><ATI_0028--[Seed 5819] Cheerleader.mp4',
-            'assets/comparison_videos/0123><ATI_0030--[Seed 8184] Judge_ Walk Out.mp4',
-            'assets/comparison_videos/0123><ATI_0040--[Seed 5072] Truck Before Cab_copy1.mp4',
-            'assets/comparison_videos/0123><ATI_0045--[Seed 5176] Judge_ Walk In From Right + Zoom_copy1.mp4',
-            'assets/comparison_videos/0123><ATI_0050--[Seed 7945] Bichon + Corgi _ Bichon Stay Behind_copy.mp4',
-            'assets/comparison_videos/0123><ATI_0052--[Seed 6303] Sora Basketball_ The ball goes into the hoop_copy3.mp4',
-            'assets/comparison_videos/0123><ATI_0064--[Seed 9651] Reverse Windmills.mp4',
-            'assets/comparison_videos/0123><ATI_0065--[Seed 4764] Candle Grab StopCam.mp4',
-            'assets/comparison_videos/0123><ATI_0087--[Seed 9567] City Biker.mp4',
-            'assets/comparison_videos/0123><ATI_0089--[Seed 875] Hot Air Baloons_ Slow camera, make baloons rise.mp4',
-            'assets/comparison_videos/0123><ATI_0093--[Seed 9995] Bichon + Corgi _ Corgi Stay Behind_copy.mp4',
-            'assets/comparison_videos/0123><ATI_0099--[Seed 8917] Move the car faster forward.mp4',
-            'assets/comparison_videos/0123><ATI_0118--[Seed 9471] Shakycam.mp4'
-        ];
-
-        const methods = [
+        const METHODS = [
             { name: 'Input', class: 'input' },
             { name: 'Ours', class: 'ours' },
             { name: 'ATI', class: 'ati' },
@@ -239,61 +220,131 @@
             { name: 'Go-with-the-Flow', class: 'gwtf' }
         ];
 
-        const videoMetadata = {"ATI_0030--[Seed 8184] Judge_ Walk Out.mp4": {"prompt": "A judge walking into an office from the left of the screen, then sitting down", "intent": "Make the judge walk in from the right instead of the left, keeping the same judge and office"}, "ATI_0064--[Seed 9651] Reverse Windmills.mp4": {"prompt": "Two windmills both turning clockwise", "intent": "Make one windmill turn clockwise and the other turn counterclockwise"}, "ATI_0050--[Seed 7945] Bichon + Corgi _ Bichon Stay Behind_copy.mp4": {"prompt": "Two dogs (a corgi and a bichon) racing, both tying", "intent": "Make the corgi win the race by running faster, leaving the bichon behind"}, "ATI_0052--[Seed 6303] Sora Basketball_ The ball goes into the hoop_copy3.mp4": {"prompt": "A basketball bouncing off a hoop", "intent": "Make the basketball go through the hoop while keeping the same camera movement and background"}, "ATI_0093--[Seed 9995] Bichon + Corgi _ Corgi Stay Behind_copy.mp4": {"prompt": "Two dogs (a corgi and a bichon) racing, both tying", "intent": "Make the bichon (white dog) win the race, coming out first while the corgi lags behind"}, "ATI_0087--[Seed 9567] City Biker.mp4": {"prompt": "A camera following a bicyclist through a city, with the bicyclist not visible in the first frame and far to the left", "intent": "Make the bicyclist visible throughout and bike more in the center of the road (move to the right), while revealing the same buildings"}, "ATI_0008--[Seed 6227] Boat_ Move Test.mp4": {"prompt": "A boat driving through a lake as the camera pans up and the boat drives forwards, revealing mountains", "intent": "Make the camera pan down instead of up while still revealing the same mountains, and make the boat move to the left instead of forwards"}, "ATI_0040--[Seed 5072] Truck Before Cab_copy1.mp4": {"prompt": "A taxi driving first with a green truck trailing behind", "intent": "Make the green truck appear first, then have the taxi speed up ahead of it"}, "ATI_0000--[Seed 8464] Blacks Freeze Camera.mp4": {"prompt": "A swan in a lake with the camera following the swan as it moves forwards", "intent": "Make the camera stay still while the swan continues swimming forwards"}, "ATI_0045--[Seed 5176] Judge_ Walk In From Right + Zoom_copy1.mp4": {"prompt": "A judge walking into a room from the left of the screen", "intent": "Keep the judge walking in from the left, but add a dolly zoom to zoom the camera in while maintaining the same background"}, "ATI_0028--[Seed 5819] Cheerleader.mp4": {"prompt": "A cheerleader holding up a pom-pom but not very excited", "intent": "Make the cheerleader raise her arm higher following the designated motion pattern, keeping the same person and gym"}, "ATI_0118--[Seed 9471] Shakycam.mp4": {"prompt": "A camera panning towards the right with jumpy movement", "intent": "Stabilize the camera to make it smoother while still revealing the same foliage, grass, and trees"}, "ATI_0089--[Seed 875] Hot Air Baloons_ Slow camera, make baloons rise.mp4": {"prompt": "Hot air balloons, with some not rising up", "intent": "Make the hot air balloons rise up (including those invisible at the start) while the camera moves the same way and reveals the same mountains and background"}, "ATI_0065--[Seed 4764] Candle Grab StopCam.mp4": {"prompt": "A person grabbing a candle with the camera moving", "intent": "Keep the person grabbing the candle but make the camera stay still, keeping the same candle and hand"}, "ATI_0099--[Seed 8917] Move the car faster forward.mp4": {"prompt": "A car driving on a road in the desert, with the camera zooming past the car causing it to go off screen", "intent": "Make the car drive forwards and stay visible throughout the entire video"}};
-
-        function getMetadata(videoPath) {
-            const parts = videoPath.split('><');
-            if (parts.length > 1) {
-                const filename = parts[1];
-                return videoMetadata[filename] || { prompt: '', intent: '' };
+        const VIDEO_DATA = [
+            {
+                path: 'assets/comparison_videos/0123><ATI_0000--[Seed 8464] Blacks Freeze Camera.mp4',
+                title: 'Blacks Freeze Camera',
+                prompt: 'A swan in a lake with the camera following the swan as it moves forwards',
+                intent: 'Make the camera stay still while the swan continues swimming forwards'
+            },
+            {
+                path: 'assets/comparison_videos/0123><ATI_0008--[Seed 6227] Boat_ Move Test.mp4',
+                title: 'Boat Move Test',
+                prompt: 'A boat driving through a lake as the camera pans up and the boat drives forwards, revealing mountains',
+                intent: 'Make the camera pan down instead of up while still revealing the same mountains, and make the boat move to the left instead of forwards'
+            },
+            {
+                path: 'assets/comparison_videos/0123><ATI_0028--[Seed 5819] Cheerleader.mp4',
+                title: 'Cheerleader',
+                prompt: 'A cheerleader holding up a pom-pom but not very excited',
+                intent: 'Make the cheerleader raise her arm higher following the designated motion pattern, keeping the same person and gym'
+            },
+            {
+                path: 'assets/comparison_videos/0123><ATI_0030--[Seed 8184] Judge_ Walk Out.mp4',
+                title: 'Judge Walk Out',
+                prompt: 'A judge walking into an office from the left of the screen, then sitting down',
+                intent: 'Make the judge walk in from the right instead of the left, keeping the same judge and office'
+            },
+            {
+                path: 'assets/comparison_videos/0123><ATI_0040--[Seed 5072] Truck Before Cab_copy1.mp4',
+                title: 'Truck Before Cab',
+                prompt: 'A taxi driving first with a green truck trailing behind',
+                intent: 'Make the green truck appear first, then have the taxi speed up ahead of it'
+            },
+            {
+                path: 'assets/comparison_videos/0123><ATI_0045--[Seed 5176] Judge_ Walk In From Right + Zoom_copy1.mp4',
+                title: 'Judge Walk In From Right + Zoom',
+                prompt: 'A judge walking into a room from the left of the screen',
+                intent: 'Keep the judge walking in from the left, but add a dolly zoom to zoom the camera in while maintaining the same background'
+            },
+            {
+                path: 'assets/comparison_videos/0123><ATI_0050--[Seed 7945] Bichon + Corgi _ Bichon Stay Behind_copy.mp4',
+                title: 'Bichon + Corgi: Bichon Stay Behind',
+                prompt: 'Two dogs (a corgi and a bichon) racing, both tying',
+                intent: 'Make the corgi win the race by running faster, leaving the bichon behind'
+            },
+            {
+                path: 'assets/comparison_videos/0123><ATI_0052--[Seed 6303] Sora Basketball_ The ball goes into the hoop_copy3.mp4',
+                title: 'Sora Basketball: The ball goes into the hoop',
+                prompt: 'A basketball bouncing off a hoop',
+                intent: 'Make the basketball go through the hoop while keeping the same camera movement and background'
+            },
+            {
+                path: 'assets/comparison_videos/0123><ATI_0064--[Seed 9651] Reverse Windmills.mp4',
+                title: 'Reverse Windmills',
+                prompt: 'Two windmills both turning clockwise',
+                intent: 'Make one windmill turn clockwise and the other turn counterclockwise'
+            },
+            {
+                path: 'assets/comparison_videos/0123><ATI_0065--[Seed 4764] Candle Grab StopCam.mp4',
+                title: 'Candle Grab StopCam',
+                prompt: 'A person grabbing a candle with the camera moving',
+                intent: 'Keep the person grabbing the candle but make the camera stay still, keeping the same candle and hand'
+            },
+            {
+                path: 'assets/comparison_videos/0123><ATI_0087--[Seed 9567] City Biker.mp4',
+                title: 'City Biker',
+                prompt: 'A camera following a bicyclist through a city, with the bicyclist not visible in the first frame and far to the left',
+                intent: 'Make the bicyclist visible throughout and bike more in the center of the road (move to the right), while revealing the same buildings'
+            },
+            {
+                path: 'assets/comparison_videos/0123><ATI_0089--[Seed 875] Hot Air Baloons_ Slow camera, make baloons rise.mp4',
+                title: 'Hot Air Balloons: Slow camera, make balloons rise',
+                prompt: 'Hot air balloons, with some not rising up',
+                intent: 'Make the hot air balloons rise up (including those invisible at the start) while the camera moves the same way and reveals the same mountains and background'
+            },
+            {
+                path: 'assets/comparison_videos/0123><ATI_0093--[Seed 9995] Bichon + Corgi _ Corgi Stay Behind_copy.mp4',
+                title: 'Bichon + Corgi: Corgi Stay Behind',
+                prompt: 'Two dogs (a corgi and a bichon) racing, both tying',
+                intent: 'Make the bichon (white dog) win the race, coming out first while the corgi lags behind'
+            },
+            {
+                path: 'assets/comparison_videos/0123><ATI_0099--[Seed 8917] Move the car faster forward.mp4',
+                title: 'Move the car faster forward',
+                prompt: 'A car driving on a road in the desert, with the camera zooming past the car causing it to go off screen',
+                intent: 'Make the car drive forwards and stay visible throughout the entire video'
+            },
+            {
+                path: 'assets/comparison_videos/0123><ATI_0118--[Seed 9471] Shakycam.mp4',
+                title: 'Shakycam',
+                prompt: 'A camera panning towards the right with jumpy movement',
+                intent: 'Stabilize the camera to make it smoother while still revealing the same foliage, grass, and trees'
             }
-            return { prompt: '', intent: '' };
-        }
+        ];
 
-        function extractSceneName(videoPath) {
-            // Extract the description part after the seed number
-            const match = videoPath.match(/\] (.+)\.mp4$/);
-            return match ? match[1] : 'Comparison';
-        }
-
-        function createVideoContainer(videoPath, index) {
+        function createVideoContainer(videoData, index) {
             const container = document.createElement('div');
             container.className = 'video-container';
 
             const title = document.createElement('div');
             title.className = 'video-title';
-            title.textContent = `${index + 1}. ${extractSceneName(videoPath)}`;
-
-            const metadata = getMetadata(videoPath);
+            title.textContent = `${index + 1}. ${videoData.title}`;
 
             const videoInfo = document.createElement('div');
             videoInfo.className = 'video-info';
 
-            if (metadata.prompt) {
-                const promptItem = document.createElement('div');
-                promptItem.className = 'video-info-item';
-                const promptLabel = document.createElement('span');
-                promptLabel.className = 'video-info-label';
-                promptLabel.textContent = 'Prompt:';
-                const promptText = document.createElement('span');
-                promptText.textContent = metadata.prompt;
-                promptItem.appendChild(promptLabel);
-                promptItem.appendChild(promptText);
-                videoInfo.appendChild(promptItem);
-            }
+            const promptItem = document.createElement('div');
+            promptItem.className = 'video-info-item';
+            const promptLabel = document.createElement('span');
+            promptLabel.className = 'video-info-label';
+            promptLabel.textContent = 'Prompt:';
+            const promptText = document.createElement('span');
+            promptText.textContent = videoData.prompt;
+            promptItem.appendChild(promptLabel);
+            promptItem.appendChild(promptText);
+            videoInfo.appendChild(promptItem);
 
-            if (metadata.intent) {
-                const intentItem = document.createElement('div');
-                intentItem.className = 'video-info-item';
-                const intentLabel = document.createElement('span');
-                intentLabel.className = 'video-info-label';
-                intentLabel.textContent = 'Intent:';
-                const intentText = document.createElement('span');
-                intentText.textContent = metadata.intent;
-                intentItem.appendChild(intentLabel);
-                intentItem.appendChild(intentText);
-                videoInfo.appendChild(intentItem);
-            }
+            const intentItem = document.createElement('div');
+            intentItem.className = 'video-info-item';
+            const intentLabel = document.createElement('span');
+            intentLabel.className = 'video-info-label';
+            intentLabel.textContent = 'Intent:';
+            const intentText = document.createElement('span');
+            intentText.textContent = videoData.intent;
+            intentItem.appendChild(intentLabel);
+            intentItem.appendChild(intentText);
+            videoInfo.appendChild(intentItem);
 
             const videoWrapper = document.createElement('div');
             videoWrapper.className = 'video-wrapper';
@@ -301,7 +352,7 @@
             videoWrapper.style.setProperty('--caption-top', `-${CAPTION_EXTEND_ABOVE_PERCENT}%`);
 
             const video = document.createElement('video');
-            video.src = videoPath;
+            video.src = videoData.path;
             video.controls = true;
             video.loop = true;
             video.muted = true;
@@ -314,7 +365,7 @@
             const captionsDiv = document.createElement('div');
             captionsDiv.className = 'video-captions';
 
-            methods.forEach(method => {
+            METHODS.forEach(method => {
                 const caption = document.createElement('div');
                 caption.className = `video-caption ${method.class}`;
                 caption.textContent = method.name;
@@ -334,8 +385,8 @@
         function initializeGallery() {
             const videoContainers = document.getElementById('video-containers');
 
-            videos.forEach((videoPath, index) => {
-                const container = createVideoContainer(videoPath, index);
+            VIDEO_DATA.forEach((videoData, index) => {
+                const container = createVideoContainer(videoData, index);
                 videoContainers.appendChild(container);
             });
         }
