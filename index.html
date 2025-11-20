@@ -5,6 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Motion Editing Video Comparisons</title>
     <style>
+        @font-face {
+            font-family: 'Futura';
+            src: url('assets/fonts/Futura.ttc') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        :root {
+            --border-radius: 12px;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -12,7 +23,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-family: 'Futura', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 40px 20px;
@@ -45,69 +56,24 @@
             background-color: rgba(255, 255, 255, 0.95);
             padding: 25px;
             margin-bottom: 30px;
-            border-radius: 12px;
+            border-radius: var(--border-radius);
             box-shadow: 0 8px 32px rgba(0,0,0,0.1);
         }
 
-        .method-labels {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .method-label {
-            flex: 1;
-            text-align: center;
-            padding: 8px;
-            font-weight: 600;
-            border-radius: 6px;
-            font-size: 0.9em;
-        }
-
-        .method-label.input {
-            background-color: #e3f2fd;
-            color: #1976d2;
-        }
-
-        .method-label.ours {
-            background-color: #f3e5f5;
-            color: #7b1fa2;
-        }
-
-        .method-label.ati {
-            background-color: #fff3e0;
-            color: #f57c00;
-        }
-
-        .method-label.revideo {
-            background-color: #e8f5e9;
-            color: #388e3c;
-        }
-
-        .method-label.gwtf {
-            background-color: #fce4ec;
-            color: #c2185b;
-        }
 
         .video-container {
             background-color: white;
             margin-bottom: 40px;
-            padding: 25px;
-            border-radius: 12px;
+            padding: 25px 0 0 0;
+            border-radius: var(--border-radius);
             box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .video-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(0,0,0,0.2);
         }
 
         .video-title {
             font-size: 1.3em;
             font-weight: 600;
             margin-bottom: 20px;
+            padding: 0 25px;
             color: #333;
             text-align: center;
         }
@@ -115,8 +81,8 @@
         .video-wrapper {
             position: relative;
             width: 100%;
-            border-radius: 8px;
-            overflow: hidden;
+            border-radius: var(--border-radius);
+            overflow: visible;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
@@ -125,37 +91,51 @@
             height: auto;
             display: block;
             background: #000;
+            border-radius: var(--border-radius);
         }
 
-        .video-description {
-            margin-top: 15px;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            color: #555;
-            font-size: 0.95em;
-            line-height: 1.6;
-        }
-
-        .legend {
+        .video-captions {
+            position: absolute;
+            top: var(--caption-top);
+            left: 0;
+            width: 100%;
+            height: var(--caption-total-height);
             display: flex;
-            justify-content: center;
-            gap: 25px;
-            flex-wrap: wrap;
-            margin-top: 15px;
+            pointer-events: none;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            overflow: hidden;
         }
 
-        .legend-item {
+        .video-caption {
+            flex: 1;
+            text-align: center;
+            padding: 8px 4px;
+            font-weight: 700;
+            font-size: 0.9em;
+            color: white;
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.9em;
+            justify-content: center;
         }
 
-        .legend-color {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
+        .video-caption.input {
+            background-color: rgb(25, 118, 210);
+        }
+
+        .video-caption.ours {
+            background-color: rgb(123, 31, 162);
+        }
+
+        .video-caption.ati {
+            background-color: rgb(245, 124, 0);
+        }
+
+        .video-caption.revideo {
+            background-color: rgb(56, 142, 60);
+        }
+
+        .video-caption.gwtf {
+            background-color: rgb(194, 24, 91);
         }
 
         footer {
@@ -175,9 +155,9 @@
                 font-size: 1em;
             }
 
-            .method-label {
-                font-size: 0.75em;
-                padding: 6px;
+            .video-caption {
+                font-size: 0.6em;
+                padding: 6px 3px;
             }
         }
     </style>
@@ -191,33 +171,11 @@
 
         <div class="info-box">
             <h3 style="margin-bottom: 15px; color: #333;">About These Comparisons</h3>
-            <p style="margin-bottom: 15px; line-height: 1.6; color: #555;">
+            <p style="line-height: 1.6; color: #555;">
                 Each video below shows a side-by-side comparison of five different methods for motion editing.
                 All methods receive the same input video and desired motion trajectories. The videos are displayed
-                in a consistent order from left to right:
+                in a consistent order from left to right: <strong>Input</strong> (Original Motion), <strong>Ours</strong>, <strong>ATI</strong>, <strong>ReVideo</strong>, and <strong>Go-with-the-Flow</strong>.
             </p>
-            <div class="legend">
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #1976d2;"></div>
-                    <span><strong>Input</strong> (Original Motion)</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #7b1fa2;"></div>
-                    <span><strong>Ours</strong></span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #f57c00;"></div>
-                    <span><strong>ATI</strong></span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #388e3c;"></div>
-                    <span><strong>ReVideo</strong></span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background-color: #c2185b;"></div>
-                    <span><strong>Go-with-the-Flow</strong></span>
-                </div>
-            </div>
         </div>
 
         <div id="video-containers"></div>
@@ -228,6 +186,12 @@
     </div>
 
     <script>
+        // Global variables
+        const IS_MOBILE = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const CAPTION_OVERLAP_PERCENT = 7; // How much caption overlaps into video
+        const CAPTION_EXTEND_ABOVE_PERCENT = 3; // How much caption extends above video
+        const CAPTION_TOTAL_HEIGHT_PERCENT = CAPTION_OVERLAP_PERCENT + CAPTION_EXTEND_ABOVE_PERCENT;
+
         const videos = [
             'assets/comparison_videos/0123><ATI_0000--[Seed 8464] Blacks Freeze Camera.mp4',
             'assets/comparison_videos/0123><ATI_0008--[Seed 6227] Boat_ Move Test.mp4',
@@ -246,6 +210,14 @@
             'assets/comparison_videos/0123><ATI_0118--[Seed 9471] Shakycam.mp4'
         ];
 
+        const methods = [
+            { name: 'Input', class: 'input' },
+            { name: 'Ours', class: 'ours' },
+            { name: 'ATI', class: 'ati' },
+            { name: 'ReVideo', class: 'revideo' },
+            { name: 'Go-with-the-Flow', class: 'gwtf' }
+        ];
+
         function extractSceneName(videoPath) {
             // Extract the description part after the seed number
             const match = videoPath.match(/\] (.+)\.mp4$/);
@@ -260,37 +232,36 @@
             title.className = 'video-title';
             title.textContent = `${index + 1}. ${extractSceneName(videoPath)}`;
 
-            const methodLabels = document.createElement('div');
-            methodLabels.className = 'method-labels';
-
-            const methods = [
-                { name: 'Input', class: 'input' },
-                { name: 'Ours', class: 'ours' },
-                { name: 'ATI', class: 'ati' },
-                { name: 'ReVideo', class: 'revideo' },
-                { name: 'Go-with-the-Flow', class: 'gwtf' }
-            ];
-
-            methods.forEach(method => {
-                const label = document.createElement('div');
-                label.className = `method-label ${method.class}`;
-                label.textContent = method.name;
-                methodLabels.appendChild(label);
-            });
-
             const videoWrapper = document.createElement('div');
             videoWrapper.className = 'video-wrapper';
+            videoWrapper.style.setProperty('--caption-total-height', `${CAPTION_TOTAL_HEIGHT_PERCENT}%`);
+            videoWrapper.style.setProperty('--caption-top', `-${CAPTION_EXTEND_ABOVE_PERCENT}%`);
 
             const video = document.createElement('video');
             video.src = videoPath;
             video.controls = true;
             video.loop = true;
+            video.muted = true;
             video.preload = 'metadata';
 
+            if (!IS_MOBILE) {
+                video.autoplay = true;
+            }
+
+            const captionsDiv = document.createElement('div');
+            captionsDiv.className = 'video-captions';
+
+            methods.forEach(method => {
+                const caption = document.createElement('div');
+                caption.className = `video-caption ${method.class}`;
+                caption.textContent = method.name;
+                captionsDiv.appendChild(caption);
+            });
+
             videoWrapper.appendChild(video);
+            videoWrapper.appendChild(captionsDiv);
 
             container.appendChild(title);
-            container.appendChild(methodLabels);
             container.appendChild(videoWrapper);
 
             return container;
