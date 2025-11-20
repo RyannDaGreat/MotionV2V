@@ -134,26 +134,50 @@
         }
 
         .info-box {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            position: relative;
             padding: 25px;
             margin-bottom: 30px;
             border-radius: var(--border-radius);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37),
+                        inset 1px 1px 0 rgba(255, 255, 255, 0.5),
+                        inset 0 0 10px rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .info-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            background: rgba(255, 255, 255, 0.2);
         }
 
 
         .video-container {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            position: relative;
             margin-bottom: 40px;
             padding: 25px 0 0 0;
             border-radius: var(--border-radius);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37),
+                        inset 1px 1px 0 rgba(255, 255, 255, 0.5),
+                        inset 0 0 10px rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .video-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            background: rgba(255, 255, 255, 0.15);
         }
 
         .video-header {
@@ -293,6 +317,16 @@
     </style>
 </head>
 <body>
+    <!-- SVG Filter for Glass Distortion -->
+    <svg width="0" height="0" style="position: absolute;">
+        <defs>
+            <filter id="glass-distortion">
+                <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="3" result="noise" seed="2"/>
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="20" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+        </defs>
+    </svg>
+
     <div class="debug-toggle" id="debugToggle">Hide Panels (Debug)</div>
     <div class="clock-background" id="clockBackground"></div>
 
