@@ -86,7 +86,7 @@
             max-width: 1400px;
             margin: 0 auto;
             position: relative;
-            z-index: 2;
+            z-index: 1;
         }
 
         header {
@@ -134,81 +134,29 @@
         }
 
         .info-box {
-            position: relative;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             padding: 25px;
             margin-bottom: 30px;
             border-radius: var(--border-radius);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37),
-                        inset 1px 1px 0 rgba(255, 255, 255, 0.5),
-                        inset 0 0 10px rgba(255, 255, 255, 0.3);
-        }
-
-        .info-box::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: -1;
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .info-box::after {
-            content: '';
-            position: absolute;
-            inset: -1px;
-            border-radius: var(--border-radius);
-            padding: 1px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(0, 0, 0, 0.3) 100%);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-            z-index: 999;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
         }
 
 
         .video-container {
-            position: relative;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             margin-bottom: 40px;
             padding: 25px 0 0 0;
             border-radius: var(--border-radius);
             border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37),
-                        inset 1px 1px 0 rgba(255, 255, 255, 0.5),
-                        inset 0 0 10px rgba(255, 255, 255, 0.3);
-        }
-
-        .video-container::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: -1;
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .video-container::after {
-            content: '';
-            position: absolute;
-            inset: -1px;
-            border-radius: var(--border-radius);
-            padding: 1px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(0, 0, 0, 0.3) 100%);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-            z-index: 999;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
         }
 
         .video-header {
-            position: relative;
-            z-index: 0;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -236,8 +184,6 @@
         }
 
         .video-info {
-            position: relative;
-            z-index: 0;
             padding: 15px 25px;
             margin-bottom: 15px;
         }
@@ -264,9 +210,7 @@
 
         .video-wrapper {
             position: relative;
-            z-index: 0;
             width: 100%;
-            aspect-ratio: 3600 / 510;
             border-radius: var(--border-radius);
             overflow: visible;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -274,7 +218,7 @@
 
         video {
             width: 100%;
-            height: 100%;
+            height: auto;
             display: block;
             background: #000;
             border-radius: var(--border-radius);
