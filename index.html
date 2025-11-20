@@ -3,227 +3,309 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video User Study</title>
+    <title>Motion Editing Video Comparisons</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 90%;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .info-box {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .method-labels {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .method-label {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            font-weight: 600;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+
+        .method-label.input {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .method-label.ours {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .method-label.ati {
+            background-color: #fff3e0;
+            color: #f57c00;
+        }
+
+        .method-label.revideo {
+            background-color: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .method-label.gwtf {
+            background-color: #fce4ec;
+            color: #c2185b;
+        }
+
         .video-container {
             background-color: white;
-            margin-bottom: 30px;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
+
+        .video-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+        }
+
         .video-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #333;
             text-align: center;
         }
-        
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
         video {
             width: 100%;
-            /* max-width: 600px; */
             height: auto;
             display: block;
-            margin: 0 auto 20px auto;
+            background: #000;
         }
-        
-        .questions {
-            margin-bottom: 20px;
-        }
-        
-        .question {
-            background-color: #f9f9f9;
+
+        .video-description {
+            margin-top: 15px;
             padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 5px;
-            border-left: 4px solid #007bff;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            color: #555;
+            font-size: 0.95em;
+            line-height: 1.6;
         }
-        
-        .question-title {
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #333;
-        }
-        
-        .options {
+
+        .legend {
             display: flex;
             justify-content: center;
-            gap: 30px;
+            gap: 25px;
+            flex-wrap: wrap;
+            margin-top: 15px;
         }
-        
-        .option {
-            font-size: 16px;
+
+        .legend-item {
             display: flex;
             align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
         }
-        
-        input[type="radio"] {
-            margin-right: 8px;
-            transform: scale(1.2);
-        }
-        
-        .results-container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            margin-top: 30px;
-        }
-        
-        .results-title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-        
-        #results {
-            width: 100%;
-            height: 150px;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            padding: 10px;
-            border: 1px solid #ccc;
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
             border-radius: 4px;
-            background-color: #f9f9f9;
-            resize: vertical;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+
+            .subtitle {
+                font-size: 1em;
+            }
+
+            .method-label {
+                font-size: 0.75em;
+                padding: 6px;
+            }
         }
     </style>
 </head>
 <body>
-    <h1 style="text-align: center; margin-bottom: 30px;">Video User Study</h1>
-    
-    <div style="background-color: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-        <p><strong>Instructions:</strong></p>
-        <p>You will be shown videos comparing five different motion editing methods side by side: Input (with original motion), Ours, ATI, ReVideo, and GWTF. For each video, please answer the three questions below by selecting your preference.</p>
-        <p><strong>Note:</strong> All methods receive the same input video and desired motion trajectories. Your task is to evaluate which method produces better results.</p>
-        <p><strong>How to evaluate:</strong> The video edits are indicated by the change in position of the colored dots (shown on Input, Ours, and ATI). Look at matching dots from input to output to determine the intended edits and how well each method preserves content while achieving the desired motion changes.</p>
-        <p><strong>When finished:</strong> Click the email link at the bottom of the page and it will prepare an email with your results to send.</p>
-    </div>
-    
-    <div id="video-containers"></div>
+    <div class="container">
+        <header>
+            <h1>Motion Editing Comparisons</h1>
+            <p class="subtitle">Interactive Video Comparison Gallery</p>
+        </header>
 
-    <div class="results-container">
-        <div class="results-title">Results (JSON Format):</div>
-        <textarea id="results" readonly placeholder="Results will appear here as you make selections..."></textarea>
-        <p style="margin-top: 15px; font-weight: bold; color: #333;">
-            Once completed, please click here to send results: <a href="#" id="emailLink">rburgert@cs.stonybrook.edu</a>
-        </p>
+        <div class="info-box">
+            <h3 style="margin-bottom: 15px; color: #333;">About These Comparisons</h3>
+            <p style="margin-bottom: 15px; line-height: 1.6; color: #555;">
+                Each video below shows a side-by-side comparison of five different methods for motion editing.
+                All methods receive the same input video and desired motion trajectories. The videos are displayed
+                in a consistent order from left to right:
+            </p>
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #1976d2;"></div>
+                    <span><strong>Input</strong> (Original Motion)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #7b1fa2;"></div>
+                    <span><strong>Ours</strong></span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #f57c00;"></div>
+                    <span><strong>ATI</strong></span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #388e3c;"></div>
+                    <span><strong>ReVideo</strong></span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background-color: #c2185b;"></div>
+                    <span><strong>Go-with-the-Flow</strong></span>
+                </div>
+            </div>
+        </div>
+
+        <div id="video-containers"></div>
+
+        <footer>
+            <p>Motion Editing Comparison Gallery</p>
+        </footer>
     </div>
 
     <script>
-        const videos = ['video_pairs/1230><ATI_0089--[Seed 875] Hot Air Baloons_ Slow camera, make baloons rise.mp4', 'video_pairs/2130><ATI_0050--[Seed 7945] Bichon + Corgi _ Bichon Stay Behind_copy.mp4', 'video_pairs/2130><ATI_0087--[Seed 9567] City Biker.mp4', 'video_pairs/1302><ATI_0093--[Seed 9995] Bichon + Corgi _ Corgi Stay Behind_copy.mp4', 'video_pairs/1230><ATI_0008--[Seed 6227] Boat_ Move Test.mp4', 'video_pairs/2301><ATI_0000--[Seed 8464] Blacks Freeze Camera.mp4', 'video_pairs/2103><ATI_0118--[Seed 9471] Shakycam.mp4', 'video_pairs/3120><ATI_0064--[Seed 9651] Reverse Windmills.mp4', 'video_pairs/0312><ATI_0065--[Seed 4764] Candle Grab StopCam.mp4', 'video_pairs/3120><ATI_0028--[Seed 5819] Cheerleader.mp4', 'video_pairs/0132><ATI_0045--[Seed 5176] Judge_ Walk In From Right + Zoom_copy1.mp4', 'video_pairs/3201><ATI_0052--[Seed 6303] Sora Basketball_ The ball goes into the hoop_copy3.mp4', 'video_pairs/0321><ATI_0030--[Seed 8184] Judge_ Walk Out.mp4', 'video_pairs/1230><ATI_0099--[Seed 8917] Move the car faster forward.mp4', 'video_pairs/3012><ATI_0040--[Seed 5072] Truck Before Cab_copy1.mp4'];
-        
-        let results = {};
-        
-        function updateResults() {
-            const resultsTextarea = document.getElementById('results');
-            const jsonData = JSON.stringify(results, null, 2);
-            resultsTextarea.value = jsonData;
-            
-            // Update email link with JSON data
-            const emailLink = document.getElementById('emailLink');
-            const subject = 'Video User Study Results';
-            const body = `Here are my user study results:\n\n${jsonData}`;
-            emailLink.href = `mailto:rburgert@cs.stonybrook.edu?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        const videos = [
+            'assets/comparison_videos/0123><ATI_0000--[Seed 8464] Blacks Freeze Camera.mp4',
+            'assets/comparison_videos/0123><ATI_0008--[Seed 6227] Boat_ Move Test.mp4',
+            'assets/comparison_videos/0123><ATI_0028--[Seed 5819] Cheerleader.mp4',
+            'assets/comparison_videos/0123><ATI_0030--[Seed 8184] Judge_ Walk Out.mp4',
+            'assets/comparison_videos/0123><ATI_0040--[Seed 5072] Truck Before Cab_copy1.mp4',
+            'assets/comparison_videos/0123><ATI_0045--[Seed 5176] Judge_ Walk In From Right + Zoom_copy1.mp4',
+            'assets/comparison_videos/0123><ATI_0050--[Seed 7945] Bichon + Corgi _ Bichon Stay Behind_copy.mp4',
+            'assets/comparison_videos/0123><ATI_0052--[Seed 6303] Sora Basketball_ The ball goes into the hoop_copy3.mp4',
+            'assets/comparison_videos/0123><ATI_0064--[Seed 9651] Reverse Windmills.mp4',
+            'assets/comparison_videos/0123><ATI_0065--[Seed 4764] Candle Grab StopCam.mp4',
+            'assets/comparison_videos/0123><ATI_0087--[Seed 9567] City Biker.mp4',
+            'assets/comparison_videos/0123><ATI_0089--[Seed 875] Hot Air Baloons_ Slow camera, make baloons rise.mp4',
+            'assets/comparison_videos/0123><ATI_0093--[Seed 9995] Bichon + Corgi _ Corgi Stay Behind_copy.mp4',
+            'assets/comparison_videos/0123><ATI_0099--[Seed 8917] Move the car faster forward.mp4',
+            'assets/comparison_videos/0123><ATI_0118--[Seed 9471] Shakycam.mp4'
+        ];
+
+        function extractSceneName(videoPath) {
+            // Extract the description part after the seed number
+            const match = videoPath.match(/\] (.+)\.mp4$/);
+            return match ? match[1] : 'Comparison';
         }
-        
+
         function createVideoContainer(videoPath, index) {
             const container = document.createElement('div');
             container.className = 'video-container';
-            
+
             const title = document.createElement('div');
             title.className = 'video-title';
-            title.textContent = `Video Pair ${index + 1}`;
-            
+            title.textContent = `${index + 1}. ${extractSceneName(videoPath)}`;
+
+            const methodLabels = document.createElement('div');
+            methodLabels.className = 'method-labels';
+
+            const methods = [
+                { name: 'Input', class: 'input' },
+                { name: 'Ours', class: 'ours' },
+                { name: 'ATI', class: 'ati' },
+                { name: 'ReVideo', class: 'revideo' },
+                { name: 'Go-with-the-Flow', class: 'gwtf' }
+            ];
+
+            methods.forEach(method => {
+                const label = document.createElement('div');
+                label.className = `method-label ${method.class}`;
+                label.textContent = method.name;
+                methodLabels.appendChild(label);
+            });
+
+            const videoWrapper = document.createElement('div');
+            videoWrapper.className = 'video-wrapper';
+
             const video = document.createElement('video');
             video.src = videoPath;
             video.controls = true;
-            video.autoplay = true;
-            video.muted = true; // Required for autoplay in most browsers
             video.loop = true;
-            
-            const questionsContainer = document.createElement('div');
-            questionsContainer.className = 'questions';
-            
-            const questions = [
-                "Q1: Which method best preserves the input video's content?",
-                "Q2: Which method best reflects the desired motion?",
-                "Q3: Which method produces the overall best edit?"
-            ];
+            video.preload = 'metadata';
 
-            const originalMethods = ['Ours', 'ATI', 'ReVideo', 'GWTF'];
-            const permutation_string = videoPath.split('/')[1].split('><')[0];
-            const permutation = permutation_string.split('').map(Number);
-            
-            questions.forEach((questionText, qIndex) => {
-                const questionDiv = document.createElement('div');
-                questionDiv.className = 'question';
-                
-                const questionTitle = document.createElement('div');
-                questionTitle.className = 'question-title';
-                questionTitle.textContent = questionText;
-                
-                const options = document.createElement('div');
-                options.className = 'options';
-                
-                const optionLabels = ['A', 'B', 'C', 'D'];
-                optionLabels.forEach((label, mIndex) => {
-                    const optionLabel = document.createElement('label');
-                    optionLabel.className = 'option';
-                    const radio = document.createElement('input');
-                    radio.type = 'radio';
-                    radio.name = `video_${index}_q${qIndex}`;
+            videoWrapper.appendChild(video);
 
-                    const permuted_method_index = permutation[mIndex];
-                    const original_method = originalMethods[permuted_method_index];
-                    radio.value = original_method;
-
-                    radio.addEventListener('change', () => {
-                        if (radio.checked) {
-                            if (!results[videoPath]) results[videoPath] = {};
-                            results[videoPath][`q${qIndex + 1}`] = radio.value;
-                            updateResults();
-                        }
-                    });
-                    optionLabel.appendChild(radio);
-                    optionLabel.appendChild(document.createTextNode(label));
-                    options.appendChild(optionLabel);
-                });
-                
-                questionDiv.appendChild(questionTitle);
-                questionDiv.appendChild(options);
-                questionsContainer.appendChild(questionDiv);
-            });
-            
             container.appendChild(title);
-            container.appendChild(video);
-            container.appendChild(questionsContainer);
-            
+            container.appendChild(methodLabels);
+            container.appendChild(videoWrapper);
+
             return container;
         }
-        
-        function initializeStudy() {
+
+        function initializeGallery() {
             const videoContainers = document.getElementById('video-containers');
-            
+
             videos.forEach((videoPath, index) => {
                 const container = createVideoContainer(videoPath, index);
                 videoContainers.appendChild(container);
             });
-            
-            updateResults();
         }
-        
-        // Initialize the study when the page loads
-        document.addEventListener('DOMContentLoaded', initializeStudy);
+
+        document.addEventListener('DOMContentLoaded', initializeGallery);
     </script>
 </body>
 </html>
