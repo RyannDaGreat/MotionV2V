@@ -84,6 +84,24 @@
             display: block;
         }
 
+        .film-strip {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.15;
+            filter: blur(1px);
+            mix-blend-mode: screen;
+        }
+
+        .film-strip.far {
+            opacity: 0.1;
+            filter: blur(2px);
+        }
+
+        .film-strip.close {
+            opacity: 0.2;
+            filter: blur(0.5px);
+        }
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -489,6 +507,116 @@
             });
         }
 
+        function createFilmStripSVG(width, height, frames, id) {
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('width', width);
+            svg.setAttribute('height', height);
+            svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+
+            // Define gradients for 3D shading
+            const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+
+            // Main film gradient (dark to light for 3D effect)
+            const filmGradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+            filmGradient.setAttribute('id', `film-gradient-${id}`);
+            filmGradient.setAttribute('x1', '0%');
+            filmGradient.setAttribute('y1', '0%');
+            filmGradient.setAttribute('x2', '100%');
+            filmGradient.setAttribute('y2', '0%');
+
+            const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+            stop1.setAttribute('offset', '0%');
+            stop1.setAttribute('style', 'stop-color:rgb(150,150,150);stop-opacity:1');
+
+            const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+            stop2.setAttribute('offset', '50%');
+            stop2.setAttribute('style', 'stop-color:rgb(220,220,220);stop-opacity:1');
+
+            const stop3 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+            stop3.setAttribute('offset', '100%');
+            stop3.setAttribute('style', 'stop-color:rgb(150,150,150);stop-opacity:1');
+
+            filmGradient.appendChild(stop1);
+            filmGradient.appendChild(stop2);
+            filmGradient.appendChild(stop3);
+            defs.appendChild(filmGradient);
+
+            // Hole gradient for depth
+            const holeGradient = document.createElementNS('http://www.w3.org/2000/svg', 'radialGradient');
+            holeGradient.setAttribute('id', `hole-gradient-${id}`);
+            const holeStop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+            holeStop1.setAttribute('offset', '0%');
+            holeStop1.setAttribute('style', 'stop-color:rgb(40,40,40);stop-opacity:1');
+            const holeStop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+            holeStop2.setAttribute('offset', '100%');
+            holeStop2.setAttribute('style', 'stop-color:rgb(80,80,80);stop-opacity:1');
+            holeGradient.appendChild(holeStop1);
+            holeGradient.appendChild(holeStop2);
+            defs.appendChild(holeGradient);
+
+            svg.appendChild(defs);
+
+            const perfWidth = width * 0.08;
+            const frameWidth = width - (perfWidth * 2);
+            const frameHeight = height / frames;
+
+            // Main film strip body
+            const filmBody = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            filmBody.setAttribute('x', 0);
+            filmBody.setAttribute('y', 0);
+            filmBody.setAttribute('width', width);
+            filmBody.setAttribute('height', height);
+            filmBody.setAttribute('fill', `url(#film-gradient-${id})`);
+            filmBody.setAttribute('stroke', 'rgb(100,100,100)');
+            filmBody.setAttribute('stroke-width', '2');
+            svg.appendChild(filmBody);
+
+            // Create frames and perforations
+            for (let i = 0; i < frames; i++) {
+                const frameY = i * frameHeight;
+
+                // Frame area (darker)
+                const frame = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                frame.setAttribute('x', perfWidth);
+                frame.setAttribute('y', frameY + frameHeight * 0.1);
+                frame.setAttribute('width', frameWidth);
+                frame.setAttribute('height', frameHeight * 0.8);
+                frame.setAttribute('fill', 'rgb(60,60,60)');
+                frame.setAttribute('stroke', 'rgb(40,40,40)');
+                frame.setAttribute('stroke-width', '1');
+                svg.appendChild(frame);
+
+                // Perforations on left side
+                const perfsPerFrame = 3;
+                for (let p = 0; p < perfsPerFrame; p++) {
+                    const perfY = frameY + (frameHeight / (perfsPerFrame + 1)) * (p + 1);
+                    const perfSize = perfWidth * 0.4;
+
+                    // Left perforations
+                    const leftPerf = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                    leftPerf.setAttribute('x', perfWidth * 0.3);
+                    leftPerf.setAttribute('y', perfY - perfSize / 2);
+                    leftPerf.setAttribute('width', perfSize);
+                    leftPerf.setAttribute('height', perfSize);
+                    leftPerf.setAttribute('rx', perfSize * 0.2);
+                    leftPerf.setAttribute('fill', `url(#hole-gradient-${id})`);
+                    svg.appendChild(leftPerf);
+
+                    // Right perforations
+                    const rightPerf = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                    rightPerf.setAttribute('x', width - perfWidth * 0.3 - perfSize);
+                    rightPerf.setAttribute('y', perfY - perfSize / 2);
+                    rightPerf.setAttribute('width', perfSize);
+                    rightPerf.setAttribute('height', perfSize);
+                    rightPerf.setAttribute('rx', perfSize * 0.2);
+                    rightPerf.setAttribute('fill', `url(#hole-gradient-${id})`);
+                    svg.appendChild(rightPerf);
+                }
+            }
+
+            return svg;
+        }
+
         function createClockSVG(size, id) {
             const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
             svg.setAttribute('width', size);
@@ -569,6 +697,7 @@
             const container = document.getElementById('clockBackground');
             const clocks = [];
             const arrows = [];
+            const filmStrips = [];
 
             // Clocks positioned to span the entire scrollable height
             // Higher y% values compensate for parallax movement
@@ -597,6 +726,15 @@
                 { from: 10, to: 8 },
                 { from: 7, to: 4 },
                 { from: 1, to: 10 }
+            ];
+
+            const filmStripConfigs = [
+                { width: 100, height: 400, frames: 4, x: '12%', y: '20%', depth: 0.4, rotation: 15, twist: 5, depthClass: 'close' },
+                { width: 80, height: 500, frames: 5, x: '65%', y: '5%', depth: 0.2, rotation: -20, twist: -8, depthClass: 'far' },
+                { width: 90, height: 350, frames: 4, x: '88%', y: '40%', depth: 0.5, rotation: 25, twist: 10, depthClass: 'close' },
+                { width: 85, height: 450, frames: 5, x: '30%', y: '80%', depth: 0.3, rotation: -15, twist: -6, depthClass: 'far' },
+                { width: 95, height: 380, frames: 4, x: '50%', y: '120%', depth: 0.6, rotation: 30, twist: 12, depthClass: 'close' },
+                { width: 75, height: 420, frames: 5, x: '8%', y: '150%', depth: 0.25, rotation: -25, twist: -7, depthClass: 'far' }
             ];
 
             clockConfigs.forEach((config, index) => {
@@ -647,6 +785,27 @@
 
                 return svg;
             }
+
+            // Create film strips
+            filmStripConfigs.forEach((config, index) => {
+                const filmDiv = document.createElement('div');
+                filmDiv.className = `film-strip ${config.depthClass}`;
+                filmDiv.style.left = config.x;
+                filmDiv.style.top = config.y;
+                filmDiv.style.transformOrigin = '50% 50%';
+                filmDiv.style.transform = `rotate(${config.rotation}deg) perspective(500px) rotateY(${config.twist}deg)`;
+
+                const svg = createFilmStripSVG(config.width, config.height, config.frames, `film-${index}`);
+                filmDiv.appendChild(svg);
+                container.appendChild(filmDiv);
+
+                filmStrips.push({
+                    element: filmDiv,
+                    depth: config.depth,
+                    baseRotation: config.rotation,
+                    twist: config.twist
+                });
+            });
 
             arrowConfigs.forEach(config => {
                 const arrowSvg = createArrow(config.from, config.to);
@@ -700,6 +859,18 @@
                         hourHand.setAttribute('transform', `rotate(${hourRotation})`);
                         minuteHand.setAttribute('transform', `rotate(${minuteRotation})`);
                     }
+                });
+
+                // Update film strips with parallax and gentle swirling motion
+                filmStrips.forEach((film, index) => {
+                    const parallaxY = -scrollY * film.depth * 0.8;
+
+                    // Add gentle rotation variation based on scroll
+                    const rotationVariation = Math.sin(scrollPercent * Math.PI * 2 + index) * 5;
+                    const twistVariation = Math.cos(scrollPercent * Math.PI * 2 + index) * 3;
+
+                    film.element.style.transform =
+                        `translateY(${parallaxY}px) rotate(${film.baseRotation + rotationVariation}deg) perspective(500px) rotateY(${film.twist + twistVariation}deg)`;
                 });
 
                 // Update arrows
