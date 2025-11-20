@@ -89,22 +89,6 @@
             z-index: 2;
         }
 
-        .distortion-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-            background:
-                radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(200, 200, 255, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 50% 50%, rgba(255, 200, 255, 0.2) 0%, transparent 60%);
-            filter: url(#glass-distortion);
-            opacity: 0.6;
-        }
-
         header {
             text-align: center;
             color: white;
@@ -158,8 +142,6 @@
             box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37),
                         inset 1px 1px 0 rgba(255, 255, 255, 0.5),
                         inset 0 0 10px rgba(255, 255, 255, 0.3);
-            overflow: hidden;
-            isolation: isolate;
         }
 
         .info-box::before {
@@ -172,6 +154,21 @@
             background: rgba(255, 255, 255, 0.2);
         }
 
+        .info-box::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: var(--border-radius);
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(0, 0, 0, 0.3) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            z-index: 999;
+        }
+
 
         .video-container {
             position: relative;
@@ -182,8 +179,6 @@
             box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37),
                         inset 1px 1px 0 rgba(255, 255, 255, 0.5),
                         inset 0 0 10px rgba(255, 255, 255, 0.3);
-            overflow: hidden;
-            isolation: isolate;
         }
 
         .video-container::before {
@@ -196,7 +191,24 @@
             background: rgba(255, 255, 255, 0.15);
         }
 
+        .video-container::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: var(--border-radius);
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(0, 0, 0, 0.3) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            z-index: 999;
+        }
+
         .video-header {
+            position: relative;
+            z-index: 0;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -224,6 +236,8 @@
         }
 
         .video-info {
+            position: relative;
+            z-index: 0;
             padding: 15px 25px;
             margin-bottom: 15px;
         }
@@ -250,7 +264,9 @@
 
         .video-wrapper {
             position: relative;
+            z-index: 0;
             width: 100%;
+            aspect-ratio: 3600 / 510;
             border-radius: var(--border-radius);
             overflow: visible;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -258,7 +274,7 @@
 
         video {
             width: 100%;
-            height: auto;
+            height: 100%;
             display: block;
             background: #000;
             border-radius: var(--border-radius);
@@ -333,21 +349,8 @@
     </style>
 </head>
 <body>
-    <!-- SVG Filter for Glass Distortion -->
-    <svg width="0" height="0" style="position: absolute;">
-        <defs>
-            <filter id="glass-distortion">
-                <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="3" result="noise" seed="2"/>
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="20" xChannelSelector="R" yChannelSelector="G"/>
-            </filter>
-        </defs>
-    </svg>
-
     <div class="debug-toggle" id="debugToggle">Hide Panels (Debug)</div>
     <div class="clock-background" id="clockBackground"></div>
-
-    <!-- Distorted overlay layer behind glass cards -->
-    <div class="distortion-overlay"></div>
 
     <div class="container">
         <header>
