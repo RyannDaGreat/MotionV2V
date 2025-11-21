@@ -287,14 +287,69 @@
             box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
         }
 
+        .demo-video-wrapper {
+            position: relative;
+            width: 100%;
+            border-radius: var(--border-radius);
+            overflow: visible;
+            margin-bottom: 15px;
+        }
+
         .demo-video-tile video {
             width: 100%;
             height: auto;
             display: block;
             background: #000;
             border-radius: var(--border-radius);
-            margin-bottom: 15px;
             aspect-ratio: 3 / 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .demo-arrow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            pointer-events: none;
+            opacity: 0.9;
+            filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+            z-index: 2;
+        }
+
+        .demo-captions {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            display: flex;
+            pointer-events: none;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .demo-caption {
+            flex: 1;
+            text-align: center;
+            padding: 8px 4px;
+            font-weight: 700;
+            font-size: 0.9em;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .demo-caption:last-child {
+            border-right: none;
         }
 
         .demo-description {
@@ -329,7 +384,8 @@
                 font-size: 1em;
             }
 
-            .video-caption {
+            .video-caption,
+            .demo-caption {
                 font-size: 0.6em;
                 padding: 6px 3px;
             }
@@ -582,6 +638,37 @@
 
         // === HELPER FUNCTIONS (DRY) ===
 
+        function createRoundedArrowSVG() {
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('width', '24');
+            svg.setAttribute('height', '24');
+            svg.setAttribute('viewBox', '0 0 24 24');
+            svg.setAttribute('class', 'demo-arrow');
+
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', 'M4 10v4h9l-3.5 3.5l2.42 2.42L19.84 12l-7.92-7.92L9.5 6.5L13 10z');
+            path.setAttribute('fill', '#fff');
+            path.setAttribute('stroke', '#000');
+            path.setAttribute('stroke-width', '0.6');
+
+            svg.appendChild(path);
+            return svg;
+        }
+
+        function createCaptions(labels, captionClass = 'video-caption') {
+            const captionsDiv = document.createElement('div');
+            captionsDiv.className = captionClass === 'demo-caption' ? 'demo-captions' : 'video-captions';
+
+            labels.forEach(label => {
+                const caption = document.createElement('div');
+                caption.className = `${captionClass} ${label.class || ''}`;
+                caption.textContent = label.name;
+                captionsDiv.appendChild(caption);
+            });
+
+            return captionsDiv;
+        }
+
         function createIconsElement(icons) {
             if (!icons || icons.length === 0) return null;
 
@@ -641,8 +728,25 @@
             const header = createVideoHeader(videoData.icons, videoData.title);
             tile.appendChild(header);
 
+            const videoWrapper = document.createElement('div');
+            videoWrapper.className = 'demo-video-wrapper';
+            videoWrapper.style.setProperty('--caption-total-height', `${CAPTION_TOTAL_HEIGHT_PERCENT}%`);
+            videoWrapper.style.setProperty('--caption-top', `-${CAPTION_EXTEND_ABOVE_PERCENT}%`);
+
             const video = createVideoElement(videoData.path);
-            tile.appendChild(video);
+            videoWrapper.appendChild(video);
+
+            const arrow = createRoundedArrowSVG();
+            videoWrapper.appendChild(arrow);
+
+            const demoLabels = [
+                { name: 'Input' },
+                { name: 'MotionV2V' }
+            ];
+            const captions = createCaptions(demoLabels, 'demo-caption');
+            videoWrapper.appendChild(captions);
+
+            tile.appendChild(videoWrapper);
 
             const description = document.createElement('div');
             description.className = 'demo-description';
@@ -706,19 +810,10 @@
             videoWrapper.style.setProperty('--caption-top', `-${CAPTION_EXTEND_ABOVE_PERCENT}%`);
 
             const video = createVideoElement(videoData.path);
-
-            const captionsDiv = document.createElement('div');
-            captionsDiv.className = 'video-captions';
-
-            METHODS.forEach(method => {
-                const caption = document.createElement('div');
-                caption.className = `video-caption ${method.class}`;
-                caption.textContent = method.name;
-                captionsDiv.appendChild(caption);
-            });
-
             videoWrapper.appendChild(video);
-            videoWrapper.appendChild(captionsDiv);
+
+            const captions = createCaptions(METHODS, 'video-caption');
+            videoWrapper.appendChild(captions);
 
             container.appendChild(videoInfo);
             container.appendChild(videoWrapper);
