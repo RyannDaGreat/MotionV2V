@@ -1181,34 +1181,50 @@
             // Universal depth scale function
             const getDepthScale = (depth) => DEPTH_SCALE_MIN + (depth * (DEPTH_SCALE_MAX - DEPTH_SCALE_MIN));
 
-            // Clocks positioned to span the entire scrollable height
-            // Higher y% values compensate for parallax movement
-            const clockConfigs = [
-                { size: 300, x: '5%', y: '5%', depth: 0.3, hourSpeed: 0.5, minuteSpeed: 6, depthClass: 'far', hourOffset: 45, minuteOffset: 120 },
-                { size: 400, x: '70%', y: '10%', depth: 0.7, hourSpeed: 0.9, minuteSpeed: 11, depthClass: 'close', hourOffset: 180, minuteOffset: 270 },
-                { size: 250, x: '45%', y: '25%', depth: 0.15, hourSpeed: 0.3, minuteSpeed: 4, depthClass: 'far', hourOffset: 90, minuteOffset: 45 },
-                { size: 350, x: '15%', y: '40%', depth: 0.5, hourSpeed: 0.6, minuteSpeed: 7.5, depthClass: 'medium', hourOffset: 270, minuteOffset: 180 },
-                { size: 200, x: '80%', y: '55%', depth: 0.2, hourSpeed: 0.4, minuteSpeed: 5, depthClass: 'far', hourOffset: 30, minuteOffset: 310 },
-                { size: 450, x: '35%', y: '70%', depth: 0.9, hourSpeed: 1.2, minuteSpeed: 14, depthClass: 'close', hourOffset: 210, minuteOffset: 150 },
-                { size: 320, x: '60%', y: '85%', depth: 0.4, hourSpeed: 0.55, minuteSpeed: 6.5, depthClass: 'medium', hourOffset: 120, minuteOffset: 90 },
-                { size: 280, x: '25%', y: '100%', depth: 0.35, hourSpeed: 0.5, minuteSpeed: 6, depthClass: 'medium', hourOffset: 60, minuteOffset: 240 },
-                { size: 360, x: '85%', y: '120%', depth: 0.6, hourSpeed: 0.8, minuteSpeed: 9, depthClass: 'close', hourOffset: 315, minuteOffset: 30 },
-                { size: 220, x: '10%', y: '140%', depth: 0.25, hourSpeed: 0.35, minuteSpeed: 4.5, depthClass: 'far', hourOffset: 15, minuteOffset: 200 },
-                { size: 380, x: '55%', y: '160%', depth: 0.65, hourSpeed: 0.85, minuteSpeed: 10, depthClass: 'close', hourOffset: 240, minuteOffset: 330 },
-                { size: 270, x: '40%', y: '180%', depth: 0.3, hourSpeed: 0.45, minuteSpeed: 5.5, depthClass: 'medium', hourOffset: 135, minuteOffset: 60 },
-                { size: 310, x: '75%', y: '200%', depth: 0.45, hourSpeed: 0.6, minuteSpeed: 7, depthClass: 'medium', hourOffset: 300, minuteOffset: 285 },
-                { size: 240, x: '20%', y: '220%', depth: 0.2, hourSpeed: 0.35, minuteSpeed: 4.2, depthClass: 'far', hourOffset: 75, minuteOffset: 135 },
-                { size: 340, x: '90%', y: '240%', depth: 0.55, hourSpeed: 0.7, minuteSpeed: 8.5, depthClass: 'medium', hourOffset: 195, minuteOffset: 225 }
+            // Generate clocks dynamically based on page height
+            const pageHeight = Math.max(document.documentElement.scrollHeight, 5000);
+            const numClocks = Math.ceil(pageHeight / 400); // One clock every 400px roughly
+
+            const clockConfigs = [];
+            const baseConfigs = [
+                { size: 300, x: 5, depth: 0.3, hourSpeed: 0.5, minuteSpeed: 6, depthClass: 'far', hourOffset: 45, minuteOffset: 120 },
+                { size: 400, x: 70, depth: 0.7, hourSpeed: 0.9, minuteSpeed: 11, depthClass: 'close', hourOffset: 180, minuteOffset: 270 },
+                { size: 250, x: 45, depth: 0.15, hourSpeed: 0.3, minuteSpeed: 4, depthClass: 'far', hourOffset: 90, minuteOffset: 45 },
+                { size: 350, x: 15, depth: 0.5, hourSpeed: 0.6, minuteSpeed: 7.5, depthClass: 'medium', hourOffset: 270, minuteOffset: 180 },
+                { size: 200, x: 80, depth: 0.2, hourSpeed: 0.4, minuteSpeed: 5, depthClass: 'far', hourOffset: 30, minuteOffset: 310 },
+                { size: 450, x: 35, depth: 0.9, hourSpeed: 1.2, minuteSpeed: 14, depthClass: 'close', hourOffset: 210, minuteOffset: 150 },
+                { size: 320, x: 60, depth: 0.4, hourSpeed: 0.55, minuteSpeed: 6.5, depthClass: 'medium', hourOffset: 120, minuteOffset: 90 },
+                { size: 280, x: 25, depth: 0.35, hourSpeed: 0.5, minuteSpeed: 6, depthClass: 'medium', hourOffset: 60, minuteOffset: 240 }
             ];
 
-            const arrowConfigs = [
-                { from: 0, to: 7 },
-                { from: 5, to: 1 },
-                { from: 3, to: 6 },
-                { from: 10, to: 8 },
-                { from: 7, to: 4 },
-                { from: 1, to: 10 }
-            ];
+            // Generate clocks to cover entire page
+            for (let i = 0; i < numClocks; i++) {
+                const baseConfig = baseConfigs[i % baseConfigs.length];
+                const yPercent = (i / numClocks) * (pageHeight / window.innerHeight * 100);
+                const xVariation = (i % 3 - 1) * 15; // Vary x position slightly
+
+                clockConfigs.push({
+                    size: baseConfig.size,
+                    x: `${Math.max(5, Math.min(90, baseConfig.x + xVariation))}%`,
+                    y: `${yPercent}%`,
+                    depth: baseConfig.depth,
+                    hourSpeed: baseConfig.hourSpeed,
+                    minuteSpeed: baseConfig.minuteSpeed,
+                    depthClass: baseConfig.depthClass,
+                    hourOffset: baseConfig.hourOffset,
+                    minuteOffset: baseConfig.minuteOffset
+                });
+            }
+
+            // Generate arrow configs dynamically - connect nearby clocks
+            const arrowConfigs = [];
+            for (let i = 0; i < Math.min(numClocks - 1, 20); i++) {
+                const from = i;
+                const to = Math.min(i + Math.floor(Math.random() * 5) + 3, numClocks - 1);
+                if (from !== to) {
+                    arrowConfigs.push({ from, to });
+                }
+            }
 
             clockConfigs.forEach((config, index) => {
                 const clockDiv = document.createElement('div');
