@@ -291,9 +291,11 @@
             position: relative;
             width: 100%;
             border-radius: var(--border-radius);
-            overflow: visible;
+            overflow: hidden;
             margin-bottom: 15px;
             margin-top: 15px;
+            padding-bottom: calc(33.333% - 30px);
+            height: 0;
         }
 
         .demo-video-tile video {
@@ -301,9 +303,10 @@
             height: auto;
             display: block;
             background: #000;
-            border-radius: var(--border-radius);
             aspect-ratio: 3 / 1;
-            position: relative;
+            position: absolute;
+            top: -30px;
+            left: 0;
             z-index: 1;
         }
 
@@ -330,7 +333,7 @@
             pointer-events: none;
             border-radius: var(--border-radius) var(--border-radius) 0 0;
             overflow: hidden;
-            z-index: 0;
+            z-index: 2;
         }
 
         .demo-caption {
