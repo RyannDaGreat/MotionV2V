@@ -413,6 +413,25 @@
             font-size: 2em;
             font-weight: 600;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            padding-bottom: 30px;
+        }
+
+        .section-divider::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(to right,
+                transparent 0%,
+                rgba(255, 255, 255, 0.3) 20%,
+                rgba(255, 255, 255, 0.9) 50%,
+                rgba(255, 255, 255, 0.3) 80%,
+                transparent 100%
+            );
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
         footer {
@@ -456,22 +475,19 @@
 
     <div class="container">
         <header>
-            <h1>Motion Editing Comparisons</h1>
-            <p class="subtitle">Interactive Video Comparison Gallery</p>
+            <h1>Motion Editing Demo Gallery</h1>
+            <p class="subtitle">Interactive demonstrations of motion editing capabilities</p>
         </header>
-
-        <div class="info-box">
-            <h3 style="margin-bottom: 15px; color: #ffffff;">About These Comparisons</h3>
-            <p style="line-height: 1.6; color: rgba(255, 255, 255, 0.9);">
-                Each video below shows a side-by-side comparison of five different methods for motion editing.
-                All methods receive the same input video and desired motion trajectories. The videos are displayed
-                in a consistent order from left to right: <strong>Input</strong> (Original Motion), <strong>Ours</strong>, <strong>ATI</strong>, <strong>ReVideo</strong>, and <strong>Go-with-the-Flow</strong>.
-            </p>
-        </div>
 
         <div id="demo-videos"></div>
 
         <div class="section-divider">Baseline Comparison Gallery</div>
+
+        <p style="text-align: center; color: rgba(255, 255, 255, 0.9); line-height: 1.6; margin-bottom: 40px; max-width: 900px; margin-left: auto; margin-right: auto;">
+            Each video below shows a side-by-side comparison of four different methods for motion editing.
+            All methods receive the same input video and desired motion trajectories. The videos are displayed
+            in a consistent order from left to right.
+        </p>
 
         <div id="video-containers"></div>
     </div>
@@ -576,8 +592,8 @@
                 title: 'Freeze Camera on Candle',
                 input: 'A hand reaching for and grabbing a candle with moving camera',
                 edit: 'Freeze camera motion while hand grabs same candle',
-                editType: '{camera} Camera stabilization',
-                icons: ['camera']
+                editType: '{camera} Camera stabilization + {all} Every frame changed',
+                icons: ['camera', 'changed-all']
             },
             {
                 path: 'assets/demo_videos_compressed/highway_fastercar_motorcyclechase.mp4_selected.mp4',
