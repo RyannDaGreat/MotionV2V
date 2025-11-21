@@ -1361,6 +1361,13 @@
             ];
 
             clockConfigs.forEach((config, index) => {
+                // Skip every 3rd clock (index % 3 === 2) to reduce to 2/3
+                if (index % 3 === 2) {
+                    // Push null placeholder to maintain array indices
+                    clocks.push(null);
+                    return;
+                }
+
                 const clockDiv = document.createElement('div');
                 clockDiv.className = `clock ${config.depthClass}`;
                 clockDiv.style.width = config.size + 'px';
@@ -1411,6 +1418,11 @@
             }
 
             arrowConfigs.forEach(config => {
+                // Skip arrows that reference skipped clocks
+                if (!clocks[config.from] || !clocks[config.to]) {
+                    return;
+                }
+
                 const arrowSvg = createArrow(config.from, config.to);
                 const avgDepth = (clocks[config.from].depth + clocks[config.to].depth) / 2;
 
@@ -1442,6 +1454,9 @@
             // Function to recalculate base positions (for zoom/resize)
             function recalculateBasePositions() {
                 clocks.forEach(clock => {
+                    // Skip null clocks
+                    if (!clock) return;
+
                     const rect = clock.element.getBoundingClientRect();
                     clock.baseX = rect.left + clock.size / 2;
                     clock.baseY = rect.top + clock.size / 2;
@@ -1474,6 +1489,9 @@
                 const scrollY = window.scrollY;
 
                 clocks.forEach(clock => {
+                    // Skip null clocks
+                    if (!clock) return;
+
                     // Parallax: closer objects (higher depth) move MORE in OPPOSITE direction
                     const parallaxY = -scrollY * clock.depth * PARALLAX_STRENGTH;
 
