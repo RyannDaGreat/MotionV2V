@@ -380,6 +380,30 @@
             margin-top: 10px;
         }
 
+        .demo-prompt, .demo-intent {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .demo-label {
+            font-weight: 700;
+            color: #ffffff;
+            display: inline-block;
+            width: 60px;
+        }
+
+        .demo-text {
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .inline-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            vertical-align: middle;
+            margin: 0 2px;
+        }
+
         .section-divider {
             text-align: center;
             color: white;
@@ -492,97 +516,113 @@
             {
                 path: 'assets/demo_videos_compressed/basketball_2.mp4_selected.mp4',
                 title: 'Basketball Makes Basket',
-                description: 'Ball bounces off the hoop in input, goes through the hoop in output',
+                prompt: 'A basketball bouncing off the hoop',
+                intent: 'Make the basketball go through the hoop using {hand} trajectory control',
                 icons: ['move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/car_move_left.mp4_selected.mp4',
                 title: 'Car Mirrored to Left Lane',
-                description: 'Car drives on left side of road in same desert scenery. Every frame changed - even balloons are now on the left',
+                prompt: 'A car driving on the right side of a desert road',
+                intent: 'Mirror {all} the video so car drives on the left. Same desert, even balloons flip to left side',
                 icons: ['move-object', 'changed-all']
             },
             {
                 path: 'assets/demo_videos_compressed/cat_fish.mp4_selected.mp4',
-                title: 'Cat Moves Away from Fish',
-                description: 'Cat moves away from fishbowl while fish and background stay identical',
+                title: 'Cat Moves Away',
+                prompt: 'A cat staring at a fish in a fishbowl',
+                intent: 'Make the cat {hand} move away while fish and background stay identical',
                 icons: ['move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/cheerleader_2.mp4_selected.mp4',
-                title: 'Cheerleader Raises Arm Higher',
-                description: 'Arm trajectory edited so pom-pom rises all the way to head height',
+                title: 'Cheerleader Raises Arm',
+                prompt: 'A cheerleader raising her arm with a pom-pom',
+                intent: 'Increase arm {hand} trajectory height so pom-pom reaches all the way to her head',
                 icons: ['move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/dograce_corgiwin.mp4_selected.mp4',
                 title: 'Corgi Wins Race',
-                description: 'Corgi wins vs original tie. Bichon gets distracted and slowed down',
+                prompt: 'Two dogs (bichon and corgi) racing and tying for a bone',
+                intent: 'Make corgi win by distracting bichon with blue dot. {time} and {hand} control to change outcome',
                 icons: ['time', 'move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/don_quixote.mp4_selected.mp4',
                 title: 'Don Quixote',
-                description: 'Windmill rotation reversed from counterclockwise to clockwise. Same sky, camera, grass revealed',
+                prompt: 'A knight chasing a windmill turning counterclockwise',
+                intent: 'Reverse {hand} windmill rotation to clockwise while preserving sky, camera, grass',
                 icons: ['move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/duck_zoom_cut.mp4_selected.mp4',
-                title: 'Duck Zoom',
-                description: 'Camera zooms out further instead of zooming in. Every frame different from input',
+                title: 'Duck Zoom Out',
+                prompt: 'Ducks in a pond with camera zooming in',
+                intent: 'Reverse {camera} zoom to zoom out with outpainting. {all} Every frame different',
                 icons: ['camera', 'changed-all']
             },
             {
                 path: 'assets/demo_videos_compressed/freeze_candle_cam.mp4_selected.mp4',
                 title: 'Freeze Camera on Candle',
-                description: 'Hand grabs same candle but camera is frozen instead of moving',
+                prompt: 'A hand reaching for and grabbing a candle with moving camera',
+                intent: 'Freeze {camera} motion while hand performs same action',
                 icons: ['camera']
             },
             {
                 path: 'assets/demo_videos_compressed/highway_fastercar_motorcyclechase.mp4_selected.mp4',
                 title: 'Highway Chase',
-                description: 'Speed adjustment for faster vehicle chase sequence',
+                prompt: 'A motorcycle chase on a highway',
+                intent: 'Speed adjustment for faster vehicle chase using {time} and {hand} control',
                 icons: ['time', 'move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/megaphone_left.mp4_selected.mp4',
-                title: 'Megaphone Left',
-                description: 'Object repositioned to move leftward',
+                title: 'Megaphone Moves Left',
+                prompt: 'A person holding a megaphone',
+                intent: 'Reposition {hand} megaphone to move leftward across frame',
                 icons: ['move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/pinwheel_newspaper.mp4_selected.mp4',
-                title: 'Pinwheel & Newspaper',
-                description: 'Man flips newspaper identically, but pinwheel now spins. Same unrevealed back of page',
+                title: 'Pinwheel Spins',
+                prompt: 'A man flipping a newspaper in front of a pinwheel',
+                intent: 'Add {hand} motion to pinwheel. Man flips newspaper identically, even unrevealed back page stays same',
                 icons: ['move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/re_penguin.mp4_selected.mp4',
                 title: 'Penguin Stays Visible',
-                description: 'Marked penguin appears for 2-3 frames in input, stays entire video in output. Other penguin unchanged',
+                prompt: 'Penguins where one appears briefly then disappears',
+                intent: '{time} Extend marked penguin presence from 2-3 frames to entire video. {all} Other penguin unchanged',
                 icons: ['move-object', 'changed-all', 'time']
             },
             {
                 path: 'assets/demo_videos_compressed/swam_freezecam.mp4_selected.mp4',
                 title: 'Swan Freeze Camera',
-                description: 'Camera frozen vs following swan. Swan head occludes same weeds in both. Every frame different',
+                prompt: 'A swan in a lake with camera following it',
+                intent: 'Freeze {camera} while swan swims. {time} Swan appears throughout. Swan head occludes same weeds. {all}',
                 icons: ['camera', 'time', 'changed-all']
             },
             {
                 path: 'assets/demo_videos_compressed/swan_faster.mp4_selected.mp4',
                 title: 'Swan Swims Faster',
-                description: 'Swan accelerated, camera stays still (not following). Same weeds revealed',
+                prompt: 'A swan swimming in a pond',
+                intent: 'Accelerate {hand} swan motion. Camera stays still (not following). Same weeds revealed',
                 icons: ['move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/swan_zoom_out.mp4_selected.mp4',
                 title: 'Swan Zoom Out',
-                description: 'Camera zooms out and stays still vs following swan. Swan occludes same weeds at same rate. Every frame different',
+                prompt: 'A swan in a pond with camera following it',
+                intent: 'Zoom out {camera} and make static vs following. Swan occludes same weeds at same rate. {all}',
                 icons: ['camera', 'changed-all']
             },
             {
                 path: 'assets/demo_videos_compressed/windmill.mp4_selected.mp4',
-                title: 'Windmill Reverses Direction',
-                description: 'Right windmill turns counterclockwise in output vs clockwise in input. Left windmill unchanged',
+                title: 'Windmill Reverses',
+                prompt: 'Two windmills rotating clockwise',
+                intent: 'Reverse {hand} right windmill to counterclockwise. Left windmill keeps rotating clockwise',
                 icons: ['move-object']
             }
         ];
@@ -769,6 +809,26 @@
 
         // === DEMO VIDEO SECTION ===
 
+        function parseInlineIcons(text) {
+            // Replace icon placeholders with inline images
+            const iconPatterns = {
+                '{hand}': 'move-object',
+                '{camera}': 'camera',
+                '{time}': 'time',
+                '{all}': 'changed-all'
+            };
+
+            let parsed = text;
+            for (const [placeholder, iconKey] of Object.entries(iconPatterns)) {
+                const iconConfig = ICON_MAP[iconKey];
+                if (iconConfig) {
+                    const imgTag = `<img src="${iconConfig.path}" class="inline-icon" alt="${iconKey}" title="${iconKey}">`;
+                    parsed = parsed.replace(new RegExp(placeholder.replace(/[{}]/g, '\\$&'), 'g'), imgTag);
+                }
+            }
+            return parsed;
+        }
+
         function createDemoVideoTile(videoData) {
             const tile = document.createElement('div');
             tile.className = 'demo-video-tile';
@@ -802,10 +862,39 @@
 
             tile.appendChild(videoWrapper);
 
-            const description = document.createElement('div');
-            description.className = 'demo-description';
-            description.textContent = videoData.description;
-            tile.appendChild(description);
+            // Create prompt/intent description
+            const descriptionContainer = document.createElement('div');
+            descriptionContainer.className = 'demo-description';
+
+            if (videoData.prompt) {
+                const promptDiv = document.createElement('div');
+                promptDiv.className = 'demo-prompt';
+                const promptLabel = document.createElement('span');
+                promptLabel.className = 'demo-label';
+                promptLabel.textContent = 'Prompt';
+                const promptText = document.createElement('span');
+                promptText.className = 'demo-text';
+                promptText.innerHTML = parseInlineIcons(videoData.prompt);
+                promptDiv.appendChild(promptLabel);
+                promptDiv.appendChild(promptText);
+                descriptionContainer.appendChild(promptDiv);
+            }
+
+            if (videoData.intent) {
+                const intentDiv = document.createElement('div');
+                intentDiv.className = 'demo-intent';
+                const intentLabel = document.createElement('span');
+                intentLabel.className = 'demo-label';
+                intentLabel.textContent = 'Intent';
+                const intentText = document.createElement('span');
+                intentText.className = 'demo-text';
+                intentText.innerHTML = parseInlineIcons(videoData.intent);
+                intentDiv.appendChild(intentLabel);
+                intentDiv.appendChild(intentText);
+                descriptionContainer.appendChild(intentDiv);
+            }
+
+            tile.appendChild(descriptionContainer);
 
             return tile;
         }
