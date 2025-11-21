@@ -83,7 +83,7 @@
         }
 
         .container {
-            max-width: 1400px;
+            max-width: 1800px;
             margin: 0 auto;
             position: relative;
             z-index: 1;
@@ -223,6 +223,7 @@
             display: block;
             background: #000;
             border-radius: var(--border-radius);
+            aspect-ratio: 3600 / 510;
         }
 
         .video-captions {
@@ -293,6 +294,7 @@
             background: #000;
             border-radius: var(--border-radius);
             margin-bottom: 15px;
+            aspect-ratio: 3 / 1;
         }
 
         .demo-description {
@@ -457,6 +459,12 @@
                 path: 'assets/demo_videos/pinwheel_newspaper.mp4_selected.mp4',
                 title: 'Pinwheel & Newspaper',
                 description: 'Multi-object scene with coordinated motion',
+                icons: ['move-object']
+            },
+            {
+                path: 'assets/demo_videos/re_penguin.mp4_selected.mp4',
+                title: 'Penguin Motion Edit',
+                description: 'Penguin motion trajectory modification',
                 icons: ['move-object']
             },
             {
