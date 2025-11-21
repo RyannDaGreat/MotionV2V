@@ -445,7 +445,7 @@
 
         <div id="demo-videos"></div>
 
-        <div class="section-divider">Interactive Video Comparison Gallery</div>
+        <div class="section-divider">Baseline Comparison Gallery</div>
 
         <div id="video-containers"></div>
     </div>
@@ -474,7 +474,7 @@
             'camera': {
                 path: 'assets/edit_icons/camera_icon.png',
                 scale: 1.4,
-                originY: '15%'
+                originY: '35%'
             },
             'time': {
                 path: 'assets/edit_icons/clock_icon.png',
@@ -725,7 +725,7 @@
 
                 // Calculate translateY from originY percentage
                 // originY of 50% = no offset, lower values lift the icon up
-                const offsetPercent = 50 - parseFloat(iconConfig.originY);
+                const offsetPercent = parseFloat(iconConfig.originY) - 50;
                 const translateY = (offsetPercent / 100) * 32; // 32px is icon height
 
                 icon.style.transform = `scale(${iconConfig.scale}) translateY(${translateY}px)`;
