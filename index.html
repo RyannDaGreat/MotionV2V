@@ -380,7 +380,7 @@
             margin-top: 10px;
         }
 
-        .demo-prompt, .demo-intent {
+        .demo-prompt, .demo-intent, .demo-edit-type {
             margin-bottom: 8px;
             line-height: 1.5;
         }
@@ -389,7 +389,7 @@
             font-weight: 700;
             color: #ffffff;
             display: inline-block;
-            width: 60px;
+            width: 80px;
         }
 
         .demo-text {
@@ -517,112 +517,128 @@
                 path: 'assets/demo_videos_compressed/basketball_2.mp4_selected.mp4',
                 title: 'Basketball Makes Basket',
                 prompt: 'A basketball bouncing off the hoop',
-                intent: 'Make the basketball go through the hoop using {hand} trajectory control',
+                intent: 'Make the basketball go through the hoop',
+                editType: '{hand} Object trajectory control',
                 icons: ['move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/car_move_left.mp4_selected.mp4',
                 title: 'Car Mirrored to Left Lane',
                 prompt: 'A car driving on the right side of a desert road',
-                intent: 'Mirror {all} the video so car drives on the left. Same desert, even balloons flip to left side',
+                intent: 'Mirror the video so car drives on the left. Same desert, even balloons flip to left side',
+                editType: '{hand} Object motion editing + {all} Every frame changed',
                 icons: ['move-object', 'changed-all']
             },
             {
                 path: 'assets/demo_videos_compressed/cat_fish.mp4_selected.mp4',
                 title: 'Cat Moves Away',
                 prompt: 'A cat staring at a fish in a fishbowl',
-                intent: 'Make the cat {hand} move away while fish and background stay identical',
+                intent: 'Make the cat move away while fish and background stay identical',
+                editType: '{hand} Object trajectory control',
                 icons: ['move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/cheerleader_2.mp4_selected.mp4',
                 title: 'Cheerleader Raises Arm',
                 prompt: 'A cheerleader raising her arm with a pom-pom',
-                intent: 'Increase arm {hand} trajectory height so pom-pom reaches all the way to her head',
+                intent: 'Increase arm trajectory height so pom-pom reaches all the way to her head',
+                editType: '{hand} Human limb trajectory control',
                 icons: ['move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/dograce_corgiwin.mp4_selected.mp4',
                 title: 'Corgi Wins Race',
                 prompt: 'Two dogs (bichon and corgi) racing and tying for a bone',
-                intent: 'Make corgi win by distracting bichon with blue dot. {time} and {hand} control to change outcome',
+                intent: 'Make corgi win by distracting bichon with blue dot to change race outcome',
+                editType: '{time} Temporal control (when distraction appears) + {hand} Object motion',
                 icons: ['time', 'move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/don_quixote.mp4_selected.mp4',
                 title: 'Don Quixote',
                 prompt: 'A knight chasing a windmill turning counterclockwise',
-                intent: 'Reverse {hand} windmill rotation to clockwise while preserving sky, camera, grass',
+                intent: 'Reverse windmill rotation to clockwise while preserving sky, camera, grass',
+                editType: '{hand} Rotational motion reversal',
                 icons: ['move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/duck_zoom_cut.mp4_selected.mp4',
                 title: 'Duck Zoom Out',
                 prompt: 'Ducks in a pond with camera zooming in',
-                intent: 'Reverse {camera} zoom to zoom out with outpainting. {all} Every frame different',
+                intent: 'Reverse zoom to zoom out with outpainting beyond original frame',
+                editType: '{camera} Camera motion reversal + {all} Every frame different',
                 icons: ['camera', 'changed-all']
             },
             {
                 path: 'assets/demo_videos_compressed/freeze_candle_cam.mp4_selected.mp4',
                 title: 'Freeze Camera on Candle',
                 prompt: 'A hand reaching for and grabbing a candle with moving camera',
-                intent: 'Freeze {camera} motion while hand performs same action',
+                intent: 'Freeze camera motion while hand performs same action',
+                editType: '{camera} Camera stabilization',
                 icons: ['camera']
             },
             {
                 path: 'assets/demo_videos_compressed/highway_fastercar_motorcyclechase.mp4_selected.mp4',
                 title: 'Highway Chase',
                 prompt: 'A motorcycle chase on a highway',
-                intent: 'Speed adjustment for faster vehicle chase using {time} and {hand} control',
+                intent: 'Speed up the vehicle chase sequence',
+                editType: '{time} Temporal acceleration + {hand} Object motion control',
                 icons: ['time', 'move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/megaphone_left.mp4_selected.mp4',
                 title: 'Megaphone Moves Left',
                 prompt: 'A person holding a megaphone',
-                intent: 'Reposition {hand} megaphone to move leftward across frame',
+                intent: 'Reposition megaphone to move leftward across frame',
+                editType: '{hand} Object trajectory control',
                 icons: ['move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/pinwheel_newspaper.mp4_selected.mp4',
                 title: 'Pinwheel Spins',
-                prompt: 'A man flipping a newspaper in front of a pinwheel',
-                intent: 'Add {hand} motion to pinwheel. Man flips newspaper identically, even unrevealed back page stays same',
+                prompt: 'A man flipping a newspaper in front of a stationary pinwheel',
+                intent: 'Add motion to pinwheel while man flips newspaper identically, even unrevealed back page stays same',
+                editType: '{hand} Rotational motion added to background object',
                 icons: ['move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/re_penguin.mp4_selected.mp4',
                 title: 'Penguin Stays Visible',
                 prompt: 'Penguins where one appears briefly then disappears',
-                intent: '{time} Extend marked penguin presence from 2-3 frames to entire video. {all} Other penguin unchanged',
+                intent: 'Extend marked penguin presence from 2-3 frames to entire video while other penguin unchanged',
+                editType: '{time} Temporal extension (when object appears) + {hand} Object motion + {all} Every frame changed',
                 icons: ['move-object', 'changed-all', 'time']
             },
             {
                 path: 'assets/demo_videos_compressed/swam_freezecam.mp4_selected.mp4',
                 title: 'Swan Freeze Camera',
                 prompt: 'A swan in a lake with camera following it',
-                intent: 'Freeze {camera} while swan swims. {time} Swan appears throughout. Swan head occludes same weeds. {all}',
+                intent: 'Freeze camera while swan swims. Swan head occludes same weeds throughout',
+                editType: '{camera} Camera stabilization + {time} Temporal control (swan appears throughout) + {all} Every frame changed',
                 icons: ['camera', 'time', 'changed-all']
             },
             {
                 path: 'assets/demo_videos_compressed/swan_faster.mp4_selected.mp4',
                 title: 'Swan Swims Faster',
                 prompt: 'A swan swimming in a pond',
-                intent: 'Accelerate {hand} swan motion. Camera stays still (not following). Same weeds revealed',
+                intent: 'Accelerate swan motion while camera stays still. Same weeds revealed',
+                editType: '{hand} Object speed increase (not camera motion)',
                 icons: ['move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/swan_zoom_out.mp4_selected.mp4',
                 title: 'Swan Zoom Out',
                 prompt: 'A swan in a pond with camera following it',
-                intent: 'Zoom out {camera} and make static vs following. Swan occludes same weeds at same rate. {all}',
+                intent: 'Zoom out and make camera static instead of following. Swan occludes same weeds at same rate',
+                editType: '{camera} Camera zoom reversal + stabilization + {all} Every frame changed',
                 icons: ['camera', 'changed-all']
             },
             {
                 path: 'assets/demo_videos_compressed/windmill.mp4_selected.mp4',
                 title: 'Windmill Reverses',
                 prompt: 'Two windmills rotating clockwise',
-                intent: 'Reverse {hand} right windmill to counterclockwise. Left windmill keeps rotating clockwise',
+                intent: 'Reverse right windmill to counterclockwise while left windmill keeps rotating clockwise',
+                editType: '{hand} Selective rotational motion reversal',
                 icons: ['move-object']
             }
         ];
@@ -747,6 +763,27 @@
             return captionsDiv;
         }
 
+        // DRY: Create a single icon element with proper scale and positioning
+        function createIconElement(iconKey, className = 'edit-icon', size = 32) {
+            const iconConfig = ICON_MAP[iconKey];
+            if (!iconConfig) return null;
+
+            const icon = document.createElement('img');
+            icon.className = className;
+            icon.src = iconConfig.path;
+            icon.alt = iconKey;
+            icon.title = iconKey;
+
+            // Calculate translateY from originY percentage
+            // originY of 50% = no offset, lower values lift the icon up
+            const offsetPercent = parseFloat(iconConfig.originY) - 50;
+            const translateY = (offsetPercent / 100) * size;
+
+            icon.style.transform = `scale(${iconConfig.scale}) translateY(${translateY}px)`;
+
+            return icon;
+        }
+
         function createIconsElement(icons) {
             if (!icons || icons.length === 0) return null;
 
@@ -754,22 +791,8 @@
             iconsDiv.className = 'video-icons';
 
             icons.forEach(iconKey => {
-                const iconConfig = ICON_MAP[iconKey];
-                if (!iconConfig) return;
-
-                const icon = document.createElement('img');
-                icon.className = 'edit-icon';
-                icon.src = iconConfig.path;
-                icon.alt = iconKey;
-                icon.title = iconKey;
-
-                // Calculate translateY from originY percentage
-                // originY of 50% = no offset, lower values lift the icon up
-                const offsetPercent = parseFloat(iconConfig.originY) - 50;
-                const translateY = (offsetPercent / 100) * 32; // 32px is icon height
-
-                icon.style.transform = `scale(${iconConfig.scale}) translateY(${translateY}px)`;
-                iconsDiv.appendChild(icon);
+                const icon = createIconElement(iconKey, 'edit-icon', 32);
+                if (icon) iconsDiv.appendChild(icon);
             });
 
             return iconsDiv;
@@ -810,7 +833,7 @@
         // === DEMO VIDEO SECTION ===
 
         function parseInlineIcons(text) {
-            // Replace icon placeholders with inline images
+            // Replace icon placeholders with inline images using DRY createIconElement
             const iconPatterns = {
                 '{hand}': 'move-object',
                 '{camera}': 'camera',
@@ -820,9 +843,12 @@
 
             let parsed = text;
             for (const [placeholder, iconKey] of Object.entries(iconPatterns)) {
-                const iconConfig = ICON_MAP[iconKey];
-                if (iconConfig) {
-                    const imgTag = `<img src="${iconConfig.path}" class="inline-icon" alt="${iconKey}" title="${iconKey}">`;
+                const icon = createIconElement(iconKey, 'inline-icon', 16);
+                if (icon) {
+                    // Convert DOM element to HTML string
+                    const tempDiv = document.createElement('div');
+                    tempDiv.appendChild(icon);
+                    const imgTag = tempDiv.innerHTML;
                     parsed = parsed.replace(new RegExp(placeholder.replace(/[{}]/g, '\\$&'), 'g'), imgTag);
                 }
             }
@@ -862,7 +888,7 @@
 
             tile.appendChild(videoWrapper);
 
-            // Create prompt/intent description
+            // Create prompt/intent/edit-type description
             const descriptionContainer = document.createElement('div');
             descriptionContainer.className = 'demo-description';
 
@@ -874,7 +900,7 @@
                 promptLabel.textContent = 'Prompt';
                 const promptText = document.createElement('span');
                 promptText.className = 'demo-text';
-                promptText.innerHTML = parseInlineIcons(videoData.prompt);
+                promptText.textContent = videoData.prompt;
                 promptDiv.appendChild(promptLabel);
                 promptDiv.appendChild(promptText);
                 descriptionContainer.appendChild(promptDiv);
@@ -888,10 +914,24 @@
                 intentLabel.textContent = 'Intent';
                 const intentText = document.createElement('span');
                 intentText.className = 'demo-text';
-                intentText.innerHTML = parseInlineIcons(videoData.intent);
+                intentText.textContent = videoData.intent;
                 intentDiv.appendChild(intentLabel);
                 intentDiv.appendChild(intentText);
                 descriptionContainer.appendChild(intentDiv);
+            }
+
+            if (videoData.editType) {
+                const editTypeDiv = document.createElement('div');
+                editTypeDiv.className = 'demo-edit-type';
+                const editTypeLabel = document.createElement('span');
+                editTypeLabel.className = 'demo-label';
+                editTypeLabel.textContent = 'Edit Type';
+                const editTypeText = document.createElement('span');
+                editTypeText.className = 'demo-text';
+                editTypeText.innerHTML = parseInlineIcons(videoData.editType);
+                editTypeDiv.appendChild(editTypeLabel);
+                editTypeDiv.appendChild(editTypeText);
+                descriptionContainer.appendChild(editTypeDiv);
             }
 
             tile.appendChild(descriptionContainer);
