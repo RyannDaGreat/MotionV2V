@@ -380,20 +380,22 @@
             margin-top: 10px;
         }
 
-        .demo-prompt, .demo-intent, .demo-edit-type {
+        .demo-input, .demo-edit, .demo-edit-type {
             margin-bottom: 8px;
             line-height: 1.5;
+            display: flex;
         }
 
         .demo-label {
             font-weight: 700;
             color: #ffffff;
-            display: inline-block;
             width: 80px;
+            flex-shrink: 0;
         }
 
         .demo-text {
             color: rgba(255, 255, 255, 0.95);
+            flex: 1;
         }
 
         .inline-icon {
@@ -516,128 +518,128 @@
             {
                 path: 'assets/demo_videos_compressed/basketball_2.mp4_selected.mp4',
                 title: 'Basketball Makes Basket',
-                prompt: 'A basketball bouncing off the hoop',
-                intent: 'Make the basketball go through the hoop',
+                input: 'A basketball bouncing off the hoop',
+                edit: 'Make the basketball go through the hoop',
                 editType: '{hand} Object trajectory control',
                 icons: ['move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/car_move_left.mp4_selected.mp4',
                 title: 'Car Mirrored to Left Lane',
-                prompt: 'A car driving on the right side of a desert road',
-                intent: 'Mirror the video so car drives on the left. Same desert, even balloons flip to left side',
-                editType: '{hand} Object motion editing + {all} Every frame changed',
+                input: 'A car driving on the right side of a desert road with balloons on the right',
+                edit: 'Mirror car to left lane, including balloons. Same desert and road',
+                editType: '{hand} Object repositioning + {all} Every frame changed',
                 icons: ['move-object', 'changed-all']
             },
             {
                 path: 'assets/demo_videos_compressed/cat_fish.mp4_selected.mp4',
                 title: 'Cat Moves Away',
-                prompt: 'A cat staring at a fish in a fishbowl',
-                intent: 'Make the cat move away while fish and background stay identical',
+                input: 'A cat staring at a fish in a fishbowl',
+                edit: 'Make the cat move away while fish and background stay identical',
                 editType: '{hand} Object trajectory control',
                 icons: ['move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/cheerleader_2.mp4_selected.mp4',
                 title: 'Cheerleader Raises Arm',
-                prompt: 'A cheerleader raising her arm with a pom-pom',
-                intent: 'Increase arm trajectory height so pom-pom reaches all the way to her head',
+                input: 'A cheerleader raising her arm barely with a pom-pom',
+                edit: 'Increase arm trajectory height so pom-pom raises all the way to her head',
                 editType: '{hand} Human limb trajectory control',
                 icons: ['move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/dograce_corgiwin.mp4_selected.mp4',
                 title: 'Corgi Wins Race',
-                prompt: 'Two dogs (bichon and corgi) racing and tying for a bone',
-                intent: 'Make corgi win by distracting bichon with blue dot to change race outcome',
-                editType: '{time} Temporal control (when distraction appears) + {hand} Object motion',
+                input: 'Two dogs (bichon and corgi) racing and tying',
+                edit: 'Make corgi win by having bichon get distracted and held up by blue dot',
+                editType: '{hand} Trajectory control + {time} Time control (distraction appears earlier)',
                 icons: ['time', 'move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/don_quixote.mp4_selected.mp4',
                 title: 'Don Quixote',
-                prompt: 'A knight chasing a windmill turning counterclockwise',
-                intent: 'Reverse windmill rotation to clockwise while preserving sky, camera, grass',
+                input: 'A knight chasing a windmill turning counterclockwise',
+                edit: 'Reverse windmill rotation to clockwise while preserving sky, camera, and grass',
                 editType: '{hand} Rotational motion reversal',
                 icons: ['move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/duck_zoom_cut.mp4_selected.mp4',
                 title: 'Duck Zoom Out',
-                prompt: 'Ducks in a pond with camera zooming in',
-                intent: 'Reverse zoom to zoom out with outpainting beyond original frame',
-                editType: '{camera} Camera motion reversal + {all} Every frame different',
+                input: 'Ducks in a pond with camera zooming in slightly',
+                edit: 'Zoom out more in beginning, zoom in more at end with outpainting',
+                editType: '{camera} Zooms out more in beginning, zooms in more at end + {all} Every frame changed',
                 icons: ['camera', 'changed-all']
             },
             {
                 path: 'assets/demo_videos_compressed/freeze_candle_cam.mp4_selected.mp4',
                 title: 'Freeze Camera on Candle',
-                prompt: 'A hand reaching for and grabbing a candle with moving camera',
-                intent: 'Freeze camera motion while hand performs same action',
+                input: 'A hand reaching for and grabbing a candle with moving camera',
+                edit: 'Freeze camera motion while hand grabs same candle',
                 editType: '{camera} Camera stabilization',
                 icons: ['camera']
             },
             {
                 path: 'assets/demo_videos_compressed/highway_fastercar_motorcyclechase.mp4_selected.mp4',
                 title: 'Highway Chase',
-                prompt: 'A motorcycle chase on a highway',
-                intent: 'Speed up the vehicle chase sequence',
-                editType: '{time} Temporal acceleration + {hand} Object motion control',
+                input: 'A car driving on a highway with a motorcycle trailing behind',
+                edit: 'Make the car drive faster so the motorcycle speeds up to chase it',
+                editType: '{time} Time control (motorcycle appears earlier in video) + {hand} Object motion',
                 icons: ['time', 'move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/megaphone_left.mp4_selected.mp4',
                 title: 'Megaphone Moves Left',
-                prompt: 'A person holding a megaphone',
-                intent: 'Reposition megaphone to move leftward across frame',
+                input: 'A person holding a megaphone moving rightward',
+                edit: 'Reposition person and megaphone to move leftward instead',
                 editType: '{hand} Object trajectory control',
                 icons: ['move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/pinwheel_newspaper.mp4_selected.mp4',
                 title: 'Pinwheel Spins',
-                prompt: 'A man flipping a newspaper in front of a stationary pinwheel',
-                intent: 'Add motion to pinwheel while man flips newspaper identically, even unrevealed back page stays same',
+                input: 'A man flipping a newspaper in front of a still pinwheel',
+                edit: 'Make pinwheel spin while man flips newspaper identically',
                 editType: '{hand} Rotational motion added to background object',
                 icons: ['move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/re_penguin.mp4_selected.mp4',
                 title: 'Penguin Stays Visible',
-                prompt: 'Penguins where one appears briefly then disappears',
-                intent: 'Extend marked penguin presence from 2-3 frames to entire video while other penguin unchanged',
-                editType: '{time} Temporal extension (when object appears) + {hand} Object motion + {all} Every frame changed',
+                input: 'Penguins where marked penguin appears for only 2-3 frames then disappears',
+                edit: 'Make marked penguin stay visible entire video, other penguin unchanged',
+                editType: '{time} Time control (penguin stays longer) + {hand} Object motion + {all} Every frame changed',
                 icons: ['move-object', 'changed-all', 'time']
             },
             {
                 path: 'assets/demo_videos_compressed/swam_freezecam.mp4_selected.mp4',
                 title: 'Swan Freeze Camera',
-                prompt: 'A swan in a lake with camera following it',
-                intent: 'Freeze camera while swan swims. Swan head occludes same weeds throughout',
-                editType: '{camera} Camera stabilization + {time} Temporal control (swan appears throughout) + {all} Every frame changed',
+                input: 'A swan swimming in a pond with camera following it',
+                edit: 'Freeze camera while swan continues swimming. Swan head occludes same weeds',
+                editType: '{camera} Camera stabilization + {time} Time control (swan appears later) + {all} Every frame changed',
                 icons: ['camera', 'time', 'changed-all']
             },
             {
                 path: 'assets/demo_videos_compressed/swan_faster.mp4_selected.mp4',
                 title: 'Swan Swims Faster',
-                prompt: 'A swan swimming in a pond',
-                intent: 'Accelerate swan motion while camera stays still. Same weeds revealed',
+                input: 'A swan swimming in a pond with camera following it',
+                edit: 'Accelerate swan speed while camera stays still (not following). Same weeds revealed',
                 editType: '{hand} Object speed increase (not camera motion)',
                 icons: ['move-object']
             },
             {
                 path: 'assets/demo_videos_compressed/swan_zoom_out.mp4_selected.mp4',
                 title: 'Swan Zoom Out',
-                prompt: 'A swan in a pond with camera following it',
-                intent: 'Zoom out and make camera static instead of following. Swan occludes same weeds at same rate',
-                editType: '{camera} Camera zoom reversal + stabilization + {all} Every frame changed',
+                input: 'A swan swimming in a pond with camera following it',
+                edit: 'Zoom out camera and make static. Swan occludes same weeds',
+                editType: '{camera} Camera zoom + stabilization + {all} Every frame changed',
                 icons: ['camera', 'changed-all']
             },
             {
                 path: 'assets/demo_videos_compressed/windmill.mp4_selected.mp4',
                 title: 'Windmill Reverses',
-                prompt: 'Two windmills rotating clockwise',
-                intent: 'Reverse right windmill to counterclockwise while left windmill keeps rotating clockwise',
+                input: 'Two windmills both rotating clockwise',
+                edit: 'Reverse right windmill to rotate counterclockwise while left windmill keeps rotating clockwise',
                 editType: '{hand} Selective rotational motion reversal',
                 icons: ['move-object']
             }
@@ -888,36 +890,36 @@
 
             tile.appendChild(videoWrapper);
 
-            // Create prompt/intent/edit-type description
+            // Create input/edit/edit-type description
             const descriptionContainer = document.createElement('div');
             descriptionContainer.className = 'demo-description';
 
-            if (videoData.prompt) {
-                const promptDiv = document.createElement('div');
-                promptDiv.className = 'demo-prompt';
-                const promptLabel = document.createElement('span');
-                promptLabel.className = 'demo-label';
-                promptLabel.textContent = 'Prompt';
-                const promptText = document.createElement('span');
-                promptText.className = 'demo-text';
-                promptText.textContent = videoData.prompt;
-                promptDiv.appendChild(promptLabel);
-                promptDiv.appendChild(promptText);
-                descriptionContainer.appendChild(promptDiv);
+            if (videoData.input) {
+                const inputDiv = document.createElement('div');
+                inputDiv.className = 'demo-input';
+                const inputLabel = document.createElement('span');
+                inputLabel.className = 'demo-label';
+                inputLabel.textContent = 'Input';
+                const inputText = document.createElement('span');
+                inputText.className = 'demo-text';
+                inputText.textContent = videoData.input;
+                inputDiv.appendChild(inputLabel);
+                inputDiv.appendChild(inputText);
+                descriptionContainer.appendChild(inputDiv);
             }
 
-            if (videoData.intent) {
-                const intentDiv = document.createElement('div');
-                intentDiv.className = 'demo-intent';
-                const intentLabel = document.createElement('span');
-                intentLabel.className = 'demo-label';
-                intentLabel.textContent = 'Intent';
-                const intentText = document.createElement('span');
-                intentText.className = 'demo-text';
-                intentText.textContent = videoData.intent;
-                intentDiv.appendChild(intentLabel);
-                intentDiv.appendChild(intentText);
-                descriptionContainer.appendChild(intentDiv);
+            if (videoData.edit) {
+                const editDiv = document.createElement('div');
+                editDiv.className = 'demo-edit';
+                const editLabel = document.createElement('span');
+                editLabel.className = 'demo-label';
+                editLabel.textContent = 'Edit';
+                const editText = document.createElement('span');
+                editText.className = 'demo-text';
+                editText.textContent = videoData.edit;
+                editDiv.appendChild(editLabel);
+                editDiv.appendChild(editText);
+                descriptionContainer.appendChild(editDiv);
             }
 
             if (videoData.editType) {
