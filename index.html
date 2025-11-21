@@ -1182,8 +1182,8 @@
             const getDepthScale = (depth) => DEPTH_SCALE_MIN + (depth * (DEPTH_SCALE_MAX - DEPTH_SCALE_MIN));
 
             // Generate clocks dynamically based on page height
-            const pageHeight = Math.max(document.documentElement.scrollHeight, 5000);
-            const numClocks = Math.ceil(pageHeight / 400); // One clock every 400px roughly
+            const pageHeight = Math.max(document.documentElement.scrollHeight, 15000);
+            const numClocks = Math.max(50, Math.ceil(pageHeight / 300)); // At least 50 clocks, or one every 300px
 
             const clockConfigs = [];
             const baseConfigs = [
@@ -1197,15 +1197,15 @@
                 { size: 280, x: 25, depth: 0.35, hourSpeed: 0.5, minuteSpeed: 6, depthClass: 'medium', hourOffset: 60, minuteOffset: 240 }
             ];
 
-            // Generate clocks to cover entire page
+            // Generate clocks randomly across page
             for (let i = 0; i < numClocks; i++) {
                 const baseConfig = baseConfigs[i % baseConfigs.length];
-                const yPercent = (i / numClocks) * (pageHeight / window.innerHeight * 100);
-                const xVariation = (i % 3 - 1) * 15; // Vary x position slightly
+                const yPercent = Math.random() * (pageHeight / window.innerHeight * 100);
+                const xPercent = Math.random() * 100; // Random 0-100% (full width)
 
                 clockConfigs.push({
                     size: baseConfig.size,
-                    x: `${Math.max(5, Math.min(90, baseConfig.x + xVariation))}%`,
+                    x: `${xPercent}%`,
                     y: `${yPercent}%`,
                     depth: baseConfig.depth,
                     hourSpeed: baseConfig.hourSpeed,
@@ -1216,13 +1216,23 @@
                 });
             }
 
-            // Generate arrow configs dynamically - connect nearby clocks
+            // Sort by y position for easier arrow generation
+            clockConfigs.sort((a, b) => parseFloat(a.y) - parseFloat(b.y));
+
+            // Generate arrow configs - connect only to immediately nearby clocks
             const arrowConfigs = [];
-            for (let i = 0; i < Math.min(numClocks - 1, 20); i++) {
-                const from = i;
-                const to = Math.min(i + Math.floor(Math.random() * 5) + 3, numClocks - 1);
-                if (from !== to) {
-                    arrowConfigs.push({ from, to });
+            for (let i = 0; i < numClocks - 1; i++) {
+                // Only connect to the next 1-2 closest clocks
+                const numConnections = Math.random() > 0.6 ? 1 : 2;
+
+                for (let c = 0; c < numConnections; c++) {
+                    // Only connect to clocks within next 2-3 positions (very close)
+                    const offset = Math.floor(Math.random() * 2) + 1;
+                    const to = i + offset;
+
+                    if (to < numClocks && arrowConfigs.length < 60) {
+                        arrowConfigs.push({ from: i, to: to });
+                    }
                 }
             }
 
@@ -1231,7 +1241,8 @@
                 clockDiv.className = `clock ${config.depthClass}`;
                 clockDiv.style.width = config.size + 'px';
                 clockDiv.style.height = config.size + 'px';
-                clockDiv.style.left = config.x;
+                // Position by center, not left edge
+                clockDiv.style.left = `calc(${config.x} - ${config.size / 2}px)`;
                 clockDiv.style.top = config.y;
 
                 const svg = createClockSVG(config.size, index);
