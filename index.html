@@ -466,10 +466,26 @@
         ];
 
         const ICON_MAP = {
-            'move-object': 'assets/edit_icons/hand_icon.png',
-            'camera': 'assets/edit_icons/camera_icon.png',
-            'time': 'assets/edit_icons/clock_icon.png',
-            'changed-all': 'assets/edit_icons/no_frames_in_common_icon.png'
+            'move-object': {
+                path: 'assets/edit_icons/hand_icon.png',
+                scale: 1.0,
+                originY: '50%'
+            },
+            'camera': {
+                path: 'assets/edit_icons/camera_icon.png',
+                scale: 1.4,
+                originY: '15%'
+            },
+            'time': {
+                path: 'assets/edit_icons/clock_icon.png',
+                scale: 1.0,
+                originY: '50%'
+            },
+            'changed-all': {
+                path: 'assets/edit_icons/no_frames_in_common_icon.png',
+                scale: 1.0,
+                originY: '50%'
+            }
         };
 
         const DEMO_VIDEO_DATA = [
@@ -698,11 +714,21 @@
             iconsDiv.className = 'video-icons';
 
             icons.forEach(iconKey => {
+                const iconConfig = ICON_MAP[iconKey];
+                if (!iconConfig) return;
+
                 const icon = document.createElement('img');
                 icon.className = 'edit-icon';
-                icon.src = ICON_MAP[iconKey] || '';
+                icon.src = iconConfig.path;
                 icon.alt = iconKey;
                 icon.title = iconKey;
+
+                // Calculate translateY from originY percentage
+                // originY of 50% = no offset, lower values lift the icon up
+                const offsetPercent = 50 - parseFloat(iconConfig.originY);
+                const translateY = (offsetPercent / 100) * 32; // 32px is icon height
+
+                icon.style.transform = `scale(${iconConfig.scale}) translateY(${translateY}px)`;
                 iconsDiv.appendChild(icon);
             });
 
