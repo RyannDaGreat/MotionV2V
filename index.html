@@ -117,7 +117,8 @@
         }
 
         body.hide-panels .video-container,
-        body.hide-panels .info-box {
+        body.hide-panels .info-box,
+        body.hide-panels .demo-video-tile {
             opacity: 0.1;
         }
 
@@ -268,6 +269,47 @@
             background-color: rgb(194, 24, 91);
         }
 
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .demo-video-tile {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+
+        .demo-video-tile video {
+            width: 100%;
+            height: auto;
+            display: block;
+            background: #000;
+            border-radius: var(--border-radius);
+            margin-bottom: 15px;
+        }
+
+        .demo-description {
+            color: rgba(255, 255, 255, 0.95);
+            line-height: 1.5;
+            margin-top: 10px;
+        }
+
+        .section-divider {
+            text-align: center;
+            color: white;
+            margin: 60px 0 40px 0;
+            font-size: 2em;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
         footer {
             text-align: center;
             color: white;
@@ -288,6 +330,16 @@
             .video-caption {
                 font-size: 0.6em;
                 padding: 6px 3px;
+            }
+
+            .demo-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .section-divider {
+                font-size: 1.5em;
+                margin: 40px 0 30px 0;
             }
         }
     </style>
@@ -310,6 +362,10 @@
                 in a consistent order from left to right: <strong>Input</strong> (Original Motion), <strong>Ours</strong>, <strong>ATI</strong>, <strong>ReVideo</strong>, and <strong>Go-with-the-Flow</strong>.
             </p>
         </div>
+
+        <div id="demo-videos"></div>
+
+        <div class="section-divider">Interactive Video Comparison Gallery</div>
 
         <div id="video-containers"></div>
     </div>
@@ -335,6 +391,99 @@
             'time': 'assets/edit_icons/clock_icon.png',
             'changed-all': 'assets/edit_icons/no_frames_in_common_icon.png'
         };
+
+        const DEMO_VIDEO_DATA = [
+            {
+                path: 'assets/demo_videos/basketball_2.mp4_selected.mp4',
+                title: 'Basketball Shot',
+                description: 'Basketball motion edit with trajectory control',
+                icons: ['move-object']
+            },
+            {
+                path: 'assets/demo_videos/car_move_left.mp4_selected.mp4',
+                title: 'Car Moves Left',
+                description: 'Vehicle repositioned to move left across frame',
+                icons: ['move-object']
+            },
+            {
+                path: 'assets/demo_videos/cat_fish.mp4_selected.mp4',
+                title: 'Cat and Fish',
+                description: 'Multi-object motion coordination between cat and fish',
+                icons: ['move-object']
+            },
+            {
+                path: 'assets/demo_videos/cheerleader_2.mp4_selected.mp4',
+                title: 'Cheerleader Routine',
+                description: 'Human motion editing with arm trajectory control',
+                icons: ['move-object']
+            },
+            {
+                path: 'assets/demo_videos/dograce_corgiwin.mp4_selected.mp4',
+                title: 'Corgi Wins Race',
+                description: 'Timing adjustment to change race outcome',
+                icons: ['time', 'move-object']
+            },
+            {
+                path: 'assets/demo_videos/don_quixote.mp4_selected.mp4',
+                title: 'Don Quixote',
+                description: 'Character motion editing in stylized scene',
+                icons: ['move-object']
+            },
+            {
+                path: 'assets/demo_videos/duck_zoom_cut.mp4_selected.mp4',
+                title: 'Duck Zoom & Cut',
+                description: 'Camera zoom with temporal discontinuity',
+                icons: ['camera', 'changed-all']
+            },
+            {
+                path: 'assets/demo_videos/freeze_candle_cam.mp4_selected.mp4',
+                title: 'Freeze Camera on Candle',
+                description: 'Static camera while subject continues motion',
+                icons: ['camera']
+            },
+            {
+                path: 'assets/demo_videos/highway_fastercar_motorcyclechase.mp4_selected.mp4',
+                title: 'Highway Chase',
+                description: 'Speed adjustment for faster vehicle chase sequence',
+                icons: ['time', 'move-object']
+            },
+            {
+                path: 'assets/demo_videos/megaphone_left.mp4_selected.mp4',
+                title: 'Megaphone Left',
+                description: 'Object repositioned to move leftward',
+                icons: ['move-object']
+            },
+            {
+                path: 'assets/demo_videos/pinwheel_newspaper.mp4_selected.mp4',
+                title: 'Pinwheel & Newspaper',
+                description: 'Multi-object scene with coordinated motion',
+                icons: ['move-object']
+            },
+            {
+                path: 'assets/demo_videos/swam_freezecam.mp4_selected.mp4',
+                title: 'Swan Freeze Camera',
+                description: 'Fixed camera perspective while swan swims through frame',
+                icons: ['camera']
+            },
+            {
+                path: 'assets/demo_videos/swan_faster.mp4_selected.mp4',
+                title: 'Swan Faster',
+                description: 'Temporal acceleration of swan swimming motion',
+                icons: ['time', 'move-object']
+            },
+            {
+                path: 'assets/demo_videos/swan_zoom_out.mp4_selected.mp4',
+                title: 'Swan Zoom Out',
+                description: 'Camera pulls back while tracking swan',
+                icons: ['camera']
+            },
+            {
+                path: 'assets/demo_videos/windmill.mp4_selected.mp4',
+                title: 'Windmill',
+                description: 'Rotational motion editing of windmill blades',
+                icons: ['move-object', 'time']
+            }
+        ];
 
         const VIDEO_DATA = [
             {
@@ -423,36 +572,99 @@
             }
         ];
 
-        function createVideoContainer(videoData, index) {
-            const container = document.createElement('div');
-            container.className = 'video-container';
+        // === HELPER FUNCTIONS (DRY) ===
 
-            // Create header with icons and title
+        function createIconsElement(icons) {
+            if (!icons || icons.length === 0) return null;
+
+            const iconsDiv = document.createElement('div');
+            iconsDiv.className = 'video-icons';
+
+            icons.forEach(iconKey => {
+                const icon = document.createElement('img');
+                icon.className = 'edit-icon';
+                icon.src = ICON_MAP[iconKey] || '';
+                icon.alt = iconKey;
+                icon.title = iconKey;
+                iconsDiv.appendChild(icon);
+            });
+
+            return iconsDiv;
+        }
+
+        function createVideoHeader(icons, titleText) {
             const header = document.createElement('div');
             header.className = 'video-header';
 
-            // Create icons container
-            if (videoData.icons && videoData.icons.length > 0) {
-                const iconsDiv = document.createElement('div');
-                iconsDiv.className = 'video-icons';
-
-                videoData.icons.forEach(iconKey => {
-                    const icon = document.createElement('img');
-                    icon.className = 'edit-icon';
-                    icon.src = ICON_MAP[iconKey] || '';
-                    icon.alt = iconKey;
-                    icon.title = iconKey;
-                    iconsDiv.appendChild(icon);
-                });
-
-                header.appendChild(iconsDiv);
+            const iconsElement = createIconsElement(icons);
+            if (iconsElement) {
+                header.appendChild(iconsElement);
             }
 
             const title = document.createElement('div');
             title.className = 'video-title';
-            title.textContent = `Edit ${index + 1}: ${videoData.title}`;
+            title.textContent = titleText;
             header.appendChild(title);
 
+            return header;
+        }
+
+        function createVideoElement(src, options = {}) {
+            const video = document.createElement('video');
+            video.src = src;
+            video.controls = true;
+            video.loop = true;
+            video.muted = true;
+            video.preload = 'metadata';
+
+            if (!IS_MOBILE && options.autoplay !== false) {
+                video.autoplay = true;
+            }
+
+            return video;
+        }
+
+        // === DEMO VIDEO SECTION ===
+
+        function createDemoVideoTile(videoData) {
+            const tile = document.createElement('div');
+            tile.className = 'demo-video-tile';
+
+            const header = createVideoHeader(videoData.icons, videoData.title);
+            tile.appendChild(header);
+
+            const video = createVideoElement(videoData.path);
+            tile.appendChild(video);
+
+            const description = document.createElement('div');
+            description.className = 'demo-description';
+            description.textContent = videoData.description;
+            tile.appendChild(description);
+
+            return tile;
+        }
+
+        function initializeDemoVideos() {
+            const container = document.getElementById('demo-videos');
+
+            const grid = document.createElement('div');
+            grid.className = 'demo-grid';
+
+            DEMO_VIDEO_DATA.forEach(videoData => {
+                const tile = createDemoVideoTile(videoData);
+                grid.appendChild(tile);
+            });
+
+            container.appendChild(grid);
+        }
+
+        // === COMPARISON VIDEO SECTION ===
+
+        function createVideoContainer(videoData, index) {
+            const container = document.createElement('div');
+            container.className = 'video-container';
+
+            const header = createVideoHeader(videoData.icons, `Edit ${index + 1}: ${videoData.title}`);
             container.appendChild(header);
 
             const videoInfo = document.createElement('div');
@@ -485,16 +697,7 @@
             videoWrapper.style.setProperty('--caption-total-height', `${CAPTION_TOTAL_HEIGHT_PERCENT}%`);
             videoWrapper.style.setProperty('--caption-top', `-${CAPTION_EXTEND_ABOVE_PERCENT}%`);
 
-            const video = document.createElement('video');
-            video.src = videoData.path;
-            video.controls = true;
-            video.loop = true;
-            video.muted = true;
-            video.preload = 'metadata';
-
-            if (!IS_MOBILE) {
-                video.autoplay = true;
-            }
+            const video = createVideoElement(videoData.path);
 
             const captionsDiv = document.createElement('div');
             captionsDiv.className = 'video-captions';
@@ -849,6 +1052,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            initializeDemoVideos();
             initializeGallery();
             initializeClockBackground();
 
