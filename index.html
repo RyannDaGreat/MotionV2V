@@ -30,6 +30,7 @@
             padding: 40px 50px;
             position: relative;
             overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
         .clock-background {
@@ -111,6 +112,7 @@
             color: white;
             font-weight: 600;
             transition: all 0.3s ease;
+            display: none;
         }
 
         .debug-toggle:hover {
@@ -481,6 +483,109 @@
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
+        .paper-title {
+            text-align: center;
+            color: white;
+            font-size: 3.5em;
+            font-weight: 700;
+            margin-bottom: 40px;
+            margin-top: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .table-of-contents {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 0 auto 40px auto;
+            padding: 20px 30px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: var(--border-radius);
+            border: var(--glass-border);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+        }
+
+        .toc-button {
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: var(--glass-border);
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            box-shadow: 0 4px 16px rgba(31, 38, 135, 0.2);
+        }
+
+        .toc-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(31, 38, 135, 0.3);
+        }
+
+        .supplementary-title {
+            text-align: center;
+            color: white;
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 30px;
+            margin-top: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .supplementary-content-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .header-icon-link {
+            width: 33%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            opacity: 0.95;
+        }
+
+        .header-icon-link:hover {
+            transform: scale(1.05);
+            opacity: 1;
+        }
+
+        .header-icon-link img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .pdf-preview-container {
+            width: 33%;
+            min-width: 300px;
+            height: 600px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            border: var(--glass-border);
+        }
+
+        .pdf-preview-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
         footer {
             text-align: center;
             color: white;
@@ -521,7 +626,38 @@
     <div class="clock-background" id="clockBackground"></div>
 
     <div class="container">
-        <div class="summary-video-section">
+        <h1 class="paper-title">MotionV2V: Editing Motion in a Video</h1>
+
+        <div style="text-align: center;">
+            <div class="table-of-contents">
+            <a href="#supplementary-section" class="toc-button">Supplementary PDF</a>
+            <a href="#summary-video-section" class="toc-button">Summary Video</a>
+            <a href="#demo-gallery-section" class="toc-button">Demo Gallery</a>
+            <a href="#baseline-comparison-section" class="toc-button">Baseline Comparisons</a>
+            </div>
+        </div>
+
+        <div class="top-divider"></div>
+
+        <h2 id="supplementary-section" class="supplementary-title">Supplementary PDF</h2>
+
+        <div class="supplementary-content-section">
+            <a href="assets/Supplementary.pdf" target="_blank" class="header-icon-link">
+                <img src="assets/paper_icon.png" alt="Paper">
+            </a>
+
+            <div class="pdf-preview-container">
+                <iframe src="assets/Supplementary.pdf" type="application/pdf"></iframe>
+            </div>
+
+            <a href="assets/Supplementary.pdf" target="_blank" class="header-icon-link">
+                <img src="assets/suppl_icon.png" alt="Supplementary">
+            </a>
+        </div>
+
+        <div class="top-divider"></div>
+
+        <div id="summary-video-section" class="summary-video-section">
             <h2 class="summary-video-title">Summary Video</h2>
             <div class="summary-video-container">
                 <video controls preload="metadata" width="1928" height="1080">
@@ -533,14 +669,14 @@
 
         <div class="top-divider"></div>
 
-        <header>
+        <header id="demo-gallery-section">
             <h1>Motion Editing Demo Gallery</h1>
             <p class="subtitle">Demonstrations of V2V Motion Edits made possible with our algorithm</p>
         </header>
 
         <div id="demo-videos"></div>
 
-        <div class="section-divider">Baseline Comparison Gallery</div>
+        <div id="baseline-comparison-section" class="section-divider">Baseline Comparison Gallery</div>
 
         <p style="text-align: center; color: rgba(255, 255, 255, 0.9); line-height: 1.6; margin-bottom: 40px; max-width: 900px; margin-left: auto; margin-right: auto;">
             Each video below shows a side-by-side comparison of four different methods for motion editing.
