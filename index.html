@@ -1181,60 +1181,184 @@
             // Universal depth scale function
             const getDepthScale = (depth) => DEPTH_SCALE_MIN + (depth * (DEPTH_SCALE_MAX - DEPTH_SCALE_MIN));
 
-            // Generate clocks dynamically based on page height
-            const pageHeight = Math.max(document.documentElement.scrollHeight, 15000);
-            const numClocks = Math.max(50, Math.ceil(pageHeight / 300)); // At least 50 clocks, or one every 300px
+            // Hand-crafted beautiful clock network
+            const clockConfigs = [
+                // Top layer
+                { size: 350, x: '15%', y: '15.0%', depth: 0.6, hourSpeed: 0.7, minuteSpeed: 8, depthClass: 'medium', hourOffset: 0, minuteOffset: 90 },
+                { size: 280, x: '50%', y: '24.0%', depth: 0.3, hourSpeed: 0.4, minuteSpeed: 5, depthClass: 'far', hourOffset: 45, minuteOffset: 180 },
+                { size: 400, x: '80%', y: '18.0%', depth: 0.8, hourSpeed: 1.0, minuteSpeed: 12, depthClass: 'close', hourOffset: 120, minuteOffset: 270 },
 
-            const clockConfigs = [];
-            const baseConfigs = [
-                { size: 300, x: 5, depth: 0.3, hourSpeed: 0.5, minuteSpeed: 6, depthClass: 'far', hourOffset: 45, minuteOffset: 120 },
-                { size: 400, x: 70, depth: 0.7, hourSpeed: 0.9, minuteSpeed: 11, depthClass: 'close', hourOffset: 180, minuteOffset: 270 },
-                { size: 250, x: 45, depth: 0.15, hourSpeed: 0.3, minuteSpeed: 4, depthClass: 'far', hourOffset: 90, minuteOffset: 45 },
-                { size: 350, x: 15, depth: 0.5, hourSpeed: 0.6, minuteSpeed: 7.5, depthClass: 'medium', hourOffset: 270, minuteOffset: 180 },
-                { size: 200, x: 80, depth: 0.2, hourSpeed: 0.4, minuteSpeed: 5, depthClass: 'far', hourOffset: 30, minuteOffset: 310 },
-                { size: 450, x: 35, depth: 0.9, hourSpeed: 1.2, minuteSpeed: 14, depthClass: 'close', hourOffset: 210, minuteOffset: 150 },
-                { size: 320, x: 60, depth: 0.4, hourSpeed: 0.55, minuteSpeed: 6.5, depthClass: 'medium', hourOffset: 120, minuteOffset: 90 },
-                { size: 280, x: 25, depth: 0.35, hourSpeed: 0.5, minuteSpeed: 6, depthClass: 'medium', hourOffset: 60, minuteOffset: 240 }
+                // Second layer
+                { size: 300, x: '30%', y: '54.0%', depth: 0.5, hourSpeed: 0.6, minuteSpeed: 7, depthClass: 'medium', hourOffset: 180, minuteOffset: 0 },
+                { size: 250, x: '65%', y: '60.0%', depth: 0.2, hourSpeed: 0.35, minuteSpeed: 4.5, depthClass: 'far', hourOffset: 270, minuteOffset: 135 },
+                { size: 380, x: '90%', y: '66.0%', depth: 0.7, hourSpeed: 0.85, minuteSpeed: 10, depthClass: 'close', hourOffset: 30, minuteOffset: 225 },
+
+                // Third layer
+                { size: 320, x: '10%', y: '96.0%', depth: 0.4, hourSpeed: 0.5, minuteSpeed: 6, depthClass: 'medium', hourOffset: 90, minuteOffset: 315 },
+                { size: 450, x: '45%', y: '105.0%', depth: 0.9, hourSpeed: 1.1, minuteSpeed: 13, depthClass: 'close', hourOffset: 210, minuteOffset: 60 },
+                { size: 270, x: '75%', y: '114.0%', depth: 0.25, hourSpeed: 0.4, minuteSpeed: 5, depthClass: 'far', hourOffset: 135, minuteOffset: 195 },
+
+                // Fourth layer
+                { size: 340, x: '25%', y: '150.0%', depth: 0.55, hourSpeed: 0.65, minuteSpeed: 7.5, depthClass: 'medium', hourOffset: 315, minuteOffset: 120 },
+                { size: 290, x: '58%', y: '156.0%', depth: 0.35, hourSpeed: 0.45, minuteSpeed: 5.5, depthClass: 'far', hourOffset: 60, minuteOffset: 240 },
+                { size: 410, x: '85%', y: '144.0%', depth: 0.75, hourSpeed: 0.9, minuteSpeed: 11, depthClass: 'close', hourOffset: 150, minuteOffset: 300 },
+
+                // Fifth layer
+                { size: 310, x: '8%', y: '195.0%', depth: 0.45, hourSpeed: 0.55, minuteSpeed: 6.5, depthClass: 'medium', hourOffset: 225, minuteOffset: 45 },
+                { size: 360, x: '40%', y: '204.0%', depth: 0.65, hourSpeed: 0.8, minuteSpeed: 9, depthClass: 'close', hourOffset: 0, minuteOffset: 180 },
+                { size: 260, x: '70%', y: '210.0%', depth: 0.3, hourSpeed: 0.4, minuteSpeed: 5, depthClass: 'far', hourOffset: 105, minuteOffset: 285 },
+
+                // Sixth layer
+                { size: 330, x: '20%', y: '246.0%', depth: 0.5, hourSpeed: 0.6, minuteSpeed: 7, depthClass: 'medium', hourOffset: 270, minuteOffset: 90 },
+                { size: 420, x: '55%', y: '255.0%', depth: 0.85, hourSpeed: 1.05, minuteSpeed: 12.5, depthClass: 'close', hourOffset: 45, minuteOffset: 210 },
+                { size: 280, x: '88%', y: '264.0%', depth: 0.35, hourSpeed: 0.45, minuteSpeed: 5.5, depthClass: 'far', hourOffset: 180, minuteOffset: 330 },
+
+                // Seventh layer
+                { size: 300, x: '12%', y: '300.0%', depth: 0.4, hourSpeed: 0.5, minuteSpeed: 6, depthClass: 'medium', hourOffset: 315, minuteOffset: 135 },
+                { size: 370, x: '48%', y: '315.0%', depth: 0.7, hourSpeed: 0.85, minuteSpeed: 10, depthClass: 'close', hourOffset: 90, minuteOffset: 255 },
+                { size: 250, x: '78%', y: '324.0%', depth: 0.25, hourSpeed: 0.35, minuteSpeed: 4.5, depthClass: 'far', hourOffset: 225, minuteOffset: 15 },
+
+                // Eighth layer
+                { size: 340, x: '30%', y: '360.0%', depth: 0.6, hourSpeed: 0.7, minuteSpeed: 8.5, depthClass: 'medium', hourOffset: 150, minuteOffset: 300 },
+                { size: 440, x: '65%', y: '354.0%', depth: 0.9, hourSpeed: 1.15, minuteSpeed: 14, depthClass: 'close', hourOffset: 30, minuteOffset: 165 },
+                { size: 270, x: '92%', y: '375.0%', depth: 0.3, hourSpeed: 0.4, minuteSpeed: 5, depthClass: 'far', hourOffset: 195, minuteOffset: 75 },
+
+                // Ninth layer
+                { size: 320, x: '18%', y: '420.0%', depth: 0.5, hourSpeed: 0.6, minuteSpeed: 7, depthClass: 'medium', hourOffset: 270, minuteOffset: 225 },
+                { size: 390, x: '52%', y: '426.0%', depth: 0.75, hourSpeed: 0.95, minuteSpeed: 11.5, depthClass: 'close', hourOffset: 60, minuteOffset: 120 },
+                { size: 260, x: '82%', y: '435.0%', depth: 0.25, hourSpeed: 0.35, minuteSpeed: 4.5, depthClass: 'far', hourOffset: 135, minuteOffset: 345 },
+
+                // Tenth layer
+                { size: 350, x: '10%', y: '480.0%', depth: 0.65, hourSpeed: 0.8, minuteSpeed: 9.5, depthClass: 'close', hourOffset: 315, minuteOffset: 195 },
+                { size: 290, x: '42%', y: '495.0%', depth: 0.4, hourSpeed: 0.5, minuteSpeed: 6, depthClass: 'medium', hourOffset: 180, minuteOffset: 270 },
+                { size: 410, x: '75%', y: '486.0%', depth: 0.8, hourSpeed: 1.0, minuteSpeed: 12, depthClass: 'close', hourOffset: 90, minuteOffset: 30 },
+
+                // Eleventh layer
+                { size: 280, x: '25%', y: '540.0%', depth: 0.35, hourSpeed: 0.45, minuteSpeed: 5.5, depthClass: 'far', hourOffset: 240, minuteOffset: 150 },
+                { size: 380, x: '60%', y: '546.0%', depth: 0.7, hourSpeed: 0.85, minuteSpeed: 10, depthClass: 'close', hourOffset: 120, minuteOffset: 30 },
+                { size: 310, x: '90%', y: '555.0%', depth: 0.5, hourSpeed: 0.6, minuteSpeed: 7, depthClass: 'medium', hourOffset: 45, minuteOffset: 315 },
+
+                // Twelfth layer
+                { size: 400, x: '15%', y: '600.0%', depth: 0.75, hourSpeed: 0.9, minuteSpeed: 11, depthClass: 'close', hourOffset: 180, minuteOffset: 225 },
+                { size: 270, x: '48%', y: '615.0%', depth: 0.3, hourSpeed: 0.4, minuteSpeed: 5, depthClass: 'far', hourOffset: 300, minuteOffset: 90 },
+                { size: 340, x: '78%', y: '606.0%', depth: 0.55, hourSpeed: 0.65, minuteSpeed: 7.5, depthClass: 'medium', hourOffset: 60, minuteOffset: 180 },
+
+                // Thirteenth layer
+                { size: 320, x: '8%', y: '660.0%', depth: 0.45, hourSpeed: 0.55, minuteSpeed: 6.5, depthClass: 'medium', hourOffset: 135, minuteOffset: 270 },
+                { size: 430, x: '45%', y: '666.0%', depth: 0.85, hourSpeed: 1.05, minuteSpeed: 12.5, depthClass: 'close', hourOffset: 210, minuteOffset: 45 },
+                { size: 260, x: '72%', y: '675.0%', depth: 0.25, hourSpeed: 0.35, minuteSpeed: 4.5, depthClass: 'far', hourOffset: 330, minuteOffset: 165 },
+
+                // Fourteenth layer
+                { size: 360, x: '22%', y: '720.0%', depth: 0.6, hourSpeed: 0.7, minuteSpeed: 8, depthClass: 'medium', hourOffset: 15, minuteOffset: 300 },
+                { size: 300, x: '55%', y: '735.0%', depth: 0.4, hourSpeed: 0.5, minuteSpeed: 6, depthClass: 'medium', hourOffset: 225, minuteOffset: 120 },
+                { size: 420, x: '85%', y: '726.0%', depth: 0.8, hourSpeed: 1.0, minuteSpeed: 12, depthClass: 'close', hourOffset: 150, minuteOffset: 255 },
+
+                // Fifteenth layer
+                { size: 290, x: '12%', y: '780.0%', depth: 0.35, hourSpeed: 0.45, minuteSpeed: 5.5, depthClass: 'far', hourOffset: 270, minuteOffset: 195 },
+                { size: 410, x: '50%', y: '786.0%', depth: 0.75, hourSpeed: 0.9, minuteSpeed: 10.5, depthClass: 'close', hourOffset: 90, minuteOffset: 15 },
+                { size: 330, x: '80%', y: '795.0%', depth: 0.5, hourSpeed: 0.6, minuteSpeed: 7, depthClass: 'medium', hourOffset: 195, minuteOffset: 330 },
+
+                // Sixteenth layer
+                { size: 370, x: '18%', y: '840.0%', depth: 0.65, hourSpeed: 0.8, minuteSpeed: 9, depthClass: 'close', hourOffset: 30, minuteOffset: 240 },
+                { size: 280, x: '52%', y: '855.0%', depth: 0.3, hourSpeed: 0.4, minuteSpeed: 5, depthClass: 'far', hourOffset: 165, minuteOffset: 75 },
+                { size: 440, x: '88%', y: '846.0%', depth: 0.85, hourSpeed: 1.1, minuteSpeed: 13, depthClass: 'close', hourOffset: 255, minuteOffset: 135 },
+
+                // Seventeenth layer
+                { size: 310, x: '10%', y: '900.0%', depth: 0.45, hourSpeed: 0.55, minuteSpeed: 6.5, depthClass: 'medium', hourOffset: 315, minuteOffset: 180 },
+                { size: 390, x: '45%', y: '915.0%', depth: 0.7, hourSpeed: 0.85, minuteSpeed: 10, depthClass: 'close', hourOffset: 120, minuteOffset: 300 },
+                { size: 270, x: '75%', y: '906.0%', depth: 0.3, hourSpeed: 0.4, minuteSpeed: 5, depthClass: 'far', hourOffset: 225, minuteOffset: 60 }
             ];
 
-            // Generate clocks randomly across page
-            for (let i = 0; i < numClocks; i++) {
-                const baseConfig = baseConfigs[i % baseConfigs.length];
-                const yPercent = Math.random() * (pageHeight / window.innerHeight * 100);
-                const xPercent = Math.random() * 100; // Random 0-100% (full width)
+            // Hand-crafted arrow connections - thoughtful flow through layers
+            const arrowConfigs = [
+                // Layer 1 to Layer 2
+                { from: 0, to: 3 },
+                { from: 1, to: 4 },
+                { from: 2, to: 5 },
 
-                clockConfigs.push({
-                    size: baseConfig.size,
-                    x: `${xPercent}%`,
-                    y: `${yPercent}%`,
-                    depth: baseConfig.depth,
-                    hourSpeed: baseConfig.hourSpeed,
-                    minuteSpeed: baseConfig.minuteSpeed,
-                    depthClass: baseConfig.depthClass,
-                    hourOffset: baseConfig.hourOffset,
-                    minuteOffset: baseConfig.minuteOffset
-                });
-            }
+                // Layer 2 to Layer 3
+                { from: 3, to: 6 },
+                { from: 4, to: 7 },
+                { from: 5, to: 8 },
 
-            // Sort by y position for easier arrow generation
-            clockConfigs.sort((a, b) => parseFloat(a.y) - parseFloat(b.y));
+                // Layer 3 to Layer 4
+                { from: 6, to: 9 },
+                { from: 7, to: 10 },
+                { from: 8, to: 11 },
 
-            // Generate arrow configs - connect only to immediately nearby clocks
-            const arrowConfigs = [];
-            for (let i = 0; i < numClocks - 1; i++) {
-                // Only connect to the next 1-2 closest clocks
-                const numConnections = Math.random() > 0.6 ? 1 : 2;
+                // Layer 4 to Layer 5
+                { from: 9, to: 12 },
+                { from: 10, to: 13 },
+                { from: 11, to: 14 },
 
-                for (let c = 0; c < numConnections; c++) {
-                    // Only connect to clocks within next 2-3 positions (very close)
-                    const offset = Math.floor(Math.random() * 2) + 1;
-                    const to = i + offset;
+                // Layer 5 to Layer 6
+                { from: 12, to: 15 },
+                { from: 13, to: 16 },
+                { from: 14, to: 17 },
 
-                    if (to < numClocks && arrowConfigs.length < 60) {
-                        arrowConfigs.push({ from: i, to: to });
-                    }
-                }
-            }
+                // Layer 6 to Layer 7
+                { from: 15, to: 18 },
+                { from: 16, to: 19 },
+                { from: 17, to: 20 },
+
+                // Layer 7 to Layer 8
+                { from: 18, to: 21 },
+                { from: 19, to: 22 },
+                { from: 20, to: 23 },
+
+                // Layer 8 to Layer 9
+                { from: 21, to: 24 },
+                { from: 22, to: 25 },
+                { from: 23, to: 26 },
+
+                // Layer 9 to Layer 10
+                { from: 24, to: 27 },
+                { from: 25, to: 28 },
+                { from: 26, to: 29 },
+
+                // Layer 10 to Layer 11
+                { from: 27, to: 30 },
+                { from: 28, to: 31 },
+                { from: 29, to: 32 },
+
+                // Layer 11 to Layer 12
+                { from: 30, to: 33 },
+                { from: 31, to: 34 },
+                { from: 32, to: 35 },
+
+                // Layer 12 to Layer 13
+                { from: 33, to: 36 },
+                { from: 34, to: 37 },
+                { from: 35, to: 38 },
+
+                // Layer 13 to Layer 14
+                { from: 36, to: 39 },
+                { from: 37, to: 40 },
+                { from: 38, to: 41 },
+
+                // Layer 14 to Layer 15
+                { from: 39, to: 42 },
+                { from: 40, to: 43 },
+                { from: 41, to: 44 },
+
+                // Layer 15 to Layer 16
+                { from: 42, to: 45 },
+                { from: 43, to: 46 },
+                { from: 44, to: 47 },
+
+                // Layer 16 to Layer 17
+                { from: 45, to: 48 },
+                { from: 46, to: 49 },
+                { from: 47, to: 50 },
+
+                // Some diagonal connections for visual interest
+                { from: 0, to: 6 },
+                { from: 7, to: 13 },
+                { from: 14, to: 19 },
+                { from: 22, to: 28 },
+                { from: 31, to: 37 },
+                { from: 40, to: 46 }
+            ];
 
             clockConfigs.forEach((config, index) => {
                 const clockDiv = document.createElement('div');
