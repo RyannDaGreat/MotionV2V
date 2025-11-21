@@ -290,12 +290,17 @@
         .demo-video-wrapper {
             position: relative;
             width: 100%;
-            border-radius: var(--border-radius);
-            overflow: hidden;
+            overflow: visible;
             margin-bottom: 15px;
             margin-top: 15px;
-            padding-bottom: calc(33.333% - 30px);
-            height: 0;
+        }
+
+        .demo-video-clip-container {
+            position: relative;
+            width: 100%;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            background: #000;
         }
 
         .demo-video-tile video {
@@ -304,10 +309,9 @@
             display: block;
             background: #000;
             aspect-ratio: 3 / 1;
-            position: absolute;
-            top: -30px;
-            left: 0;
+            position: relative;
             z-index: 1;
+            margin-top: -30px;
         }
 
         .demo-arrow {
