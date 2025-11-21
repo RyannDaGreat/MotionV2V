@@ -741,11 +741,17 @@
             videoWrapper.style.setProperty('--caption-total-height', `${CAPTION_TOTAL_HEIGHT_PERCENT}%`);
             videoWrapper.style.setProperty('--caption-top', `-${CAPTION_EXTEND_ABOVE_PERCENT}%`);
 
+            // Create clip container for proper cropping with rounded corners
+            const clipContainer = document.createElement('div');
+            clipContainer.className = 'demo-video-clip-container';
+
             const video = createVideoElement(videoData.path);
-            videoWrapper.appendChild(video);
+            clipContainer.appendChild(video);
 
             const arrow = createRoundedArrowSVG();
-            videoWrapper.appendChild(arrow);
+            clipContainer.appendChild(arrow);
+
+            videoWrapper.appendChild(clipContainer);
 
             const demoLabels = [
                 { name: 'Input' },
