@@ -1056,29 +1056,34 @@
                 });
             });
 
-            // Store initial positions once
-            clocks.forEach(clock => {
-                const rect = clock.element.getBoundingClientRect();
-                clock.baseX = rect.left + clock.size / 2;
-                clock.baseY = rect.top + clock.size / 2;
-            });
+            // Function to recalculate base positions (for zoom/resize)
+            function recalculateBasePositions() {
+                clocks.forEach(clock => {
+                    const rect = clock.element.getBoundingClientRect();
+                    clock.baseX = rect.left + clock.size / 2;
+                    clock.baseY = rect.top + clock.size / 2;
+                });
 
-            // Calculate fixed dash count for each arrow based on initial 3D distance
-            arrows.forEach(arrow => {
-                const fromClock = clocks[arrow.from];
-                const toClock = clocks[arrow.to];
+                // Recalculate fixed dash count for each arrow
+                arrows.forEach(arrow => {
+                    const fromClock = clocks[arrow.from];
+                    const toClock = clocks[arrow.to];
 
-                const dx = toClock.baseX - fromClock.baseX;
-                const dy = toClock.baseY - fromClock.baseY;
-                const baseLength = Math.sqrt(dx * dx + dy * dy);
+                    const dx = toClock.baseX - fromClock.baseX;
+                    const dy = toClock.baseY - fromClock.baseY;
+                    const baseLength = Math.sqrt(dx * dx + dy * dy);
 
-                // Calculate perceived 3D length using universal depth scale
-                const depthScale = getDepthScale(arrow.depth);
-                const perceived3DLength = baseLength * depthScale;
+                    // Calculate perceived 3D length using universal depth scale
+                    const depthScale = getDepthScale(arrow.depth);
+                    const perceived3DLength = baseLength * depthScale;
 
-                // Store fixed number of dashes based on initial distance
-                arrow.numDashes = Math.max(3, Math.round(perceived3DLength / DASH_FREQUENCY));
-            });
+                    // Store fixed number of dashes based on initial distance
+                    arrow.numDashes = Math.max(3, Math.round(perceived3DLength / DASH_FREQUENCY));
+                });
+            }
+
+            // Store initial positions
+            recalculateBasePositions();
 
             let ticking = false;
             function updateClocks() {
@@ -1179,6 +1184,20 @@
             }
 
             window.addEventListener('scroll', requestTick);
+
+            // Recalculate positions on resize/zoom
+            let resizeTicking = false;
+            window.addEventListener('resize', () => {
+                if (!resizeTicking) {
+                    requestAnimationFrame(() => {
+                        recalculateBasePositions();
+                        updateClocks();
+                        resizeTicking = false;
+                    });
+                    resizeTicking = true;
+                }
+            });
+
             updateClocks();
         }
 
