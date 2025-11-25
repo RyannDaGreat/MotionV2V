@@ -489,6 +489,12 @@
             border: none;
             margin: 0;
             padding: 0;
+            pointer-events: none;
+        }
+
+        .summary-video-container.expanded iframe {
+            pointer-events: auto;
+            cursor: default;
         }
 
         .top-divider {
@@ -1769,6 +1775,22 @@
                 panelsHidden = !panelsHidden;
                 document.body.classList.toggle('hide-panels', panelsHidden);
                 debugToggle.textContent = panelsHidden ? 'Show Panels' : 'Hide Panels (Debug)';
+            });
+
+            // Summary video expand on click
+            const summaryVideoContainer = document.querySelector('.summary-video-container');
+            const summaryVideoIframe = summaryVideoContainer.querySelector('iframe');
+
+            summaryVideoContainer.addEventListener('click', () => {
+                if (!summaryVideoContainer.classList.contains('expanded')) {
+                    summaryVideoContainer.classList.add('expanded');
+                    // Update iframe src to autoplay
+                    const currentSrc = summaryVideoIframe.src;
+                    if (!currentSrc.includes('autoplay=1')) {
+                        const separator = currentSrc.includes('?') ? '&' : '?';
+                        summaryVideoIframe.src = currentSrc + separator + 'autoplay=1';
+                    }
+                }
             });
         });
     </script>
