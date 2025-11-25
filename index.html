@@ -459,14 +459,36 @@
             box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
             margin-bottom: 40px;
             overflow: hidden;
+            width: 50%;
+            margin-left: auto;
+            margin-right: auto;
+            transition: width 0.5s ease, transform 0.5s ease;
+            cursor: pointer;
         }
 
-        .summary-video-container video {
+        .summary-video-container:hover {
+            transform: scale(1.02);
+        }
+
+        .summary-video-container.expanded {
+            width: 100%;
+            cursor: default;
+        }
+
+        .summary-video-container.expanded:hover {
+            transform: scale(1);
+        }
+
+        .summary-video-container video,
+        .summary-video-container iframe {
             width: 100%;
             display: block;
             cursor: pointer;
             aspect-ratio: 16 / 9;
             object-fit: cover;
+            border: none;
+            margin: 0;
+            padding: 0;
         }
 
         .top-divider {
@@ -637,21 +659,9 @@
             </div>
         </div>
 
-        <div class="top-divider"></div>
-
-        <h2 id="supplementary-section" class="supplementary-title">Supplementary PDF</h2>
-
-        <div class="supplementary-content-section">
-            <a href="assets/Supplementary.pdf" target="_blank" class="header-icon-link">
-                <img src="assets/paper_icon.png" alt="Paper">
-            </a>
-
-            <div class="pdf-preview-container">
-                <iframe src="assets/Supplementary.pdf" type="application/pdf"></iframe>
-            </div>
-
-            <a href="assets/Supplementary.pdf" target="_blank" class="header-icon-link">
-                <img src="assets/suppl_icon.png" alt="Supplementary">
+        <div id="supplementary-section" style="text-align: center; margin: 40px 0;">
+            <a href="assets/motionv2v.pdf" target="_blank">
+                <img src="assets/paper_peacock.png" alt="Paper" style="max-width: 100%; height: auto; display: inline-block;">
             </a>
         </div>
 
@@ -660,7 +670,7 @@
         <div id="summary-video-section" class="summary-video-section">
             <h2 class="summary-video-title">Summary Video</h2>
             <div class="summary-video-container">
-                <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/AwgFBEk1dkw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <iframe width="100%" height="100%" src="https://www.youtube-nocookie.com/embed/AwgFBEk1dkw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             </div>
         </div>
 
