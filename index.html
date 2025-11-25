@@ -673,43 +673,13 @@
         }
 
         .demo-preview-section {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: var(--border-radius);
-            border: var(--glass-border);
-            overflow: hidden;
-            width: 350px;
             flex-shrink: 0;
         }
 
-        .demo-preview-video {
-            width: 100%;
-            position: relative;
-        }
-
-        .demo-preview-video video {
-            width: 100%;
-            height: auto;
+        .demo-preview-section img {
+            height: 100%;
+            width: auto;
             display: block;
-            background: #000;
-            aspect-ratio: 3 / 1;
-            position: relative;
-            margin-top: -30px;
-        }
-
-        .demo-preview-arrow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        .demo-preview-arrow svg {
-            width: 36px;
-            height: 36px;
         }
 
         .abstract-title {
@@ -890,26 +860,7 @@
                 </div>
                 <div class="abstract-divider" style="margin-left: 30px; margin-right: 30px;"></div>
                 <div class="demo-preview-section">
-                    <div class="demo-preview-video">
-                        <video autoplay loop muted playsinline>
-                            <source src="assets/demo_videos/megaphone_left.mp4_selected.mp4" type="video/mp4">
-                        </video>
-                        <div class="demo-preview-arrow">
-                            <svg width="36" height="36" viewBox="0 0 24 24">
-                                <path d="M4 10v4h9l-3.5 3.5l2.42 2.42L19.84 12l-7.92-7.92L9.5 6.5L13 10z" fill="#fff" stroke="#000" stroke-width="0.6"/>
-                            </svg>
-                        </div>
-                    </div>
-                    <div class="demo-preview-video">
-                        <video autoplay loop muted playsinline>
-                            <source src="assets/demo_videos/car_move_left.mp4_selected.mp4" type="video/mp4">
-                        </video>
-                        <div class="demo-preview-arrow">
-                            <svg width="36" height="36" viewBox="0 0 24 24">
-                                <path d="M4 10v4h9l-3.5 3.5l2.42 2.42L19.84 12l-7.92-7.92L9.5 6.5L13 10z" fill="#fff" stroke="#000" stroke-width="0.6"/>
-                            </svg>
-                        </div>
-                    </div>
+                    <img src="assets/demo_videos/teaser/teaser_video.gif" alt="Demo">
                 </div>
             </div>
         </div>
