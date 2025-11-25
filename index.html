@@ -565,7 +565,7 @@
             position: relative;
             width: 100%;
             max-width: 1400px;
-            height: 400px;
+            height: 300px;
             margin: 0 auto;
             display: flex;
             align-items: flex-end;
@@ -687,11 +687,9 @@
             </div>
         </div>
 
-        <div id="supplementary-section" style="text-align: center; margin: 20px 0;">
+        <div id="supplementary-section" style="text-align: center; margin: 10px 0 -50px 0;">
             <div class="paper-peacock" id="paperPeacock"></div>
         </div>
-
-        <div class="top-divider"></div>
 
         <div id="summary-video-section" class="summary-video-section">
             <h2 class="summary-video-title">Summary Video</h2>
@@ -1805,16 +1803,19 @@
                 const hoverAngle = -hoverSpread/2 + (i * hoverSpread / (numPages - 1));
 
                 // Set CSS variables and z-index on anchor (first page on top)
+                const baseZIndex = numPages - i;
                 link.style.setProperty('--rotation', `${defaultAngle}deg`);
                 link.style.setProperty('--rotation-hover', `${hoverAngle}deg`);
-                link.style.zIndex = numPages - i;
+                link.style.zIndex = baseZIndex;
 
-                // Add hover listeners to expand on page hover
+                // Add hover listeners to expand on page hover and boost z-index
                 link.addEventListener('mouseenter', () => {
                     container.classList.add('expanded');
+                    link.style.zIndex = baseZIndex + 100;
                 });
                 link.addEventListener('mouseleave', () => {
                     container.classList.remove('expanded');
+                    link.style.zIndex = baseZIndex;
                 });
 
                 link.appendChild(img);
