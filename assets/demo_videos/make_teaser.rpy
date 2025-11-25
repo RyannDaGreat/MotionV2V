@@ -29,10 +29,15 @@ demo_videos = [
     )
     for video in eta(demo_videos, "Adding Arrows")
 ]
+demo_videos=[[blend_images(1,with_corner_radius(y,20)) for y in x] for x in eta(demo_videos,'Radii')]
 
 demo_pairs=[vertically_concatenated_videos(a,b) for a,b in split_into_sublists(demo_videos,2,keep_remainder=False)]
-demo_pairs=[resize_images(x,size=.5) for x in demo_pairs]
+demo_pairs=[resize_images(x,size=.5*2/3) for x in demo_pairs]
 full_video = np.concatenate(demo_pairs)
+full_video=labeled_images(full_video,' ',font='Futura',size=3,text_color='black',background_color='white')
+full_video=labeled_images(full_video,' MotionV2V: Editing Motion in a Video ',font='Futura',size=30,text_color='black',background_color='white')
+full_video=labeled_images(full_video,' ',font='Futura',size=3,text_color='black',background_color='white')
+
 
 teaser_mp4_path = save_video_mp4(full_video,'teaser/teaser_video.mp4',framerate=15,video_bitrate='max')
 teaser_gif_path = convert_to_gif_via_ffmpeg(teaser_mp4_path,framerate=15)
