@@ -1785,6 +1785,7 @@
             const numPages = 13;
             const defaultSpread = 50; // degrees
             const hoverSpread = 80; // degrees
+            const pages = [];
 
             for (let i = 0; i < numPages; i++) {
                 const link = document.createElement('a');
@@ -1792,6 +1793,7 @@
                 link.target = '_blank';
                 link.style.position = 'absolute';
                 link.style.bottom = '0';
+                link.style.pointerEvents = 'none'; // Allow mouse to pass through
 
                 const img = document.createElement('img');
                 img.src = `assets/paper_images/paper_image_full_${i}.jpg`;
@@ -1808,19 +1810,74 @@
                 link.style.setProperty('--rotation-hover', `${hoverAngle}deg`);
                 link.style.zIndex = baseZIndex;
 
-                // Add hover listeners to expand on page hover and boost z-index
-                link.addEventListener('mouseenter', () => {
-                    container.classList.add('expanded');
-                    link.style.zIndex = baseZIndex + 100;
-                });
-                link.addEventListener('mouseleave', () => {
-                    container.classList.remove('expanded');
-                    link.style.zIndex = baseZIndex;
-                });
-
                 link.appendChild(img);
                 container.appendChild(link);
+
+                pages.push({ link, img, baseZIndex });
             }
+
+            // Track mouse position and detect which pages are under cursor
+            let isHovering = false;
+            container.addEventListener('mousemove', (e) => {
+                const mouseX = e.clientX;
+                const mouseY = e.clientY;
+
+                // Temporarily enable pointer events to use elementFromPoint
+                pages.forEach(({ link }) => {
+                    link.style.pointerEvents = 'auto';
+                });
+
+                // Check all elements under the mouse cursor
+                const hoveredPages = new Set();
+                let element = document.elementFromPoint(mouseX, mouseY);
+
+                // Walk up the DOM tree to find all paper pages
+                while (element) {
+                    const page = pages.find(p => p.link === element || p.img === element);
+                    if (page) {
+                        hoveredPages.add(page);
+                    }
+                    // Hide this element temporarily to check what's behind it
+                    if (element.classList?.contains('paper-page') || element.tagName === 'A') {
+                        const originalPointerEvents = element.style.pointerEvents;
+                        element.style.pointerEvents = 'none';
+                        element = document.elementFromPoint(mouseX, mouseY);
+                        // Restore but we'll set properly below
+                    } else {
+                        break;
+                    }
+                }
+
+                // Reset all pages first
+                pages.forEach(({ link, baseZIndex }) => {
+                    link.style.zIndex = baseZIndex;
+                    link.style.pointerEvents = 'none';
+                });
+
+                // Boost z-index for hovered pages
+                const anyHovered = hoveredPages.size > 0;
+                hoveredPages.forEach(({ link, baseZIndex }) => {
+                    link.style.zIndex = baseZIndex + 100;
+                    link.style.pointerEvents = 'auto';
+                });
+
+                if (anyHovered && !isHovering) {
+                    container.classList.add('expanded');
+                    isHovering = true;
+                } else if (!anyHovered && isHovering) {
+                    container.classList.remove('expanded');
+                    isHovering = false;
+                }
+            });
+
+            container.addEventListener('mouseleave', () => {
+                pages.forEach(({ link, baseZIndex }) => {
+                    link.style.zIndex = baseZIndex;
+                    link.style.pointerEvents = 'none';
+                });
+                container.classList.remove('expanded');
+                isHovering = false;
+            });
         }
 
         document.addEventListener('DOMContentLoaded', () => {
