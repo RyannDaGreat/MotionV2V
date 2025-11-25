@@ -614,7 +614,7 @@
 
         .paper-section-container {
             display: flex;
-            gap: 30px;
+            gap: 0px;
             max-width: 1400px;
             margin: 0 auto;
             align-items: flex-start;
@@ -633,7 +633,7 @@
 
         .abstract-divider {
             width: 2px;
-            height: 100%;
+            align-self: stretch;
             background: linear-gradient(to bottom,
                 transparent 0%,
                 rgba(255, 255, 255, 0.3) 20%,
@@ -643,11 +643,13 @@
             );
             box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
             flex-shrink: 0;
+            min-height: 300px;
+            margin-left: -100px;
+            margin-right: 30px;
         }
 
         .abstract-section {
             flex: 1;
-            padding-left: 30px;
             color: white;
         }
 
