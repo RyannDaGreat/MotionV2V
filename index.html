@@ -129,8 +129,58 @@
         h1 {
             font-size: 3em;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .authors-section {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .authors-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px 30px;
+            margin-bottom: 15px;
+        }
+
+        .author {
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+
+        .author a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .author a:hover {
+            opacity: 0.7;
+        }
+
+        .author sup {
+            font-size: 0.8em;
+        }
+
+        .affiliations {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px 20px;
+            font-size: 0.95em;
+            opacity: 0.95;
+        }
+
+        .affiliation {
+            white-space: nowrap;
+        }
+
+        .affiliation sup {
+            font-size: 0.8em;
         }
 
         .subtitle {
@@ -562,15 +612,57 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
+        .paper-section-container {
+            display: flex;
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            align-items: flex-start;
+            padding-top: 30px;
+        }
+
         .paper-peacock {
             position: relative;
-            width: 100%;
-            max-width: 1400px;
+            width: 50%;
             height: 300px;
-            margin: 0 auto;
             display: flex;
             align-items: flex-end;
             justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .abstract-divider {
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to bottom,
+                transparent 0%,
+                rgba(255, 255, 255, 0.3) 20%,
+                rgba(255, 255, 255, 0.9) 50%,
+                rgba(255, 255, 255, 0.3) 80%,
+                transparent 100%
+            );
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            flex-shrink: 0;
+        }
+
+        .abstract-section {
+            flex: 1;
+            padding-left: 30px;
+            color: white;
+        }
+
+        .abstract-title {
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .abstract-text {
+            font-size: 1em;
+            line-height: 1.6;
+            text-align: left;
+            color: rgba(255, 255, 255, 0.95);
         }
 
         .paper-peacock a {
@@ -679,6 +771,22 @@
     <div class="container">
         <h1 class="paper-title">MotionV2V: Editing Motion in a Video</h1>
 
+        <div class="authors-section">
+            <div class="authors-list">
+                <div class="author"><a href="https://ryanndagreat.github.io" target="_blank">Ryan Burgert</a><sup>1,2</sup></div>
+                <div class="author"><a href="https://scholar.google.com/citations?user=LQvi5XAAAAAJ&hl=en" target="_blank">Charles Herrmann</a><sup>1</sup></div>
+                <div class="author"><a href="https://research.google/people/forrestercole/" target="_blank">Forrester Cole</a><sup>1</sup></div>
+                <div class="author"><a href="http://michaelryoo.com/" target="_blank">Michael S Ryoo</a><sup>2</sup></div>
+                <div class="author"><a href="https://nealwadhwa.com/" target="_blank">Neal Wadhwa</a><sup>1</sup></div>
+                <div class="author"><a href="https://anvoynov.github.io/anvoynov/" target="_blank">Andrey Voynov</a><sup>1</sup></div>
+                <div class="author"><a href="https://natanielruiz.github.io/" target="_blank">Nataniel Ruiz</a><sup>1</sup></div>
+            </div>
+            <div class="affiliations">
+                <div class="affiliation"><sup>1</sup>Google</div>
+                <div class="affiliation"><sup>2</sup>Stony Brook University</div>
+            </div>
+        </div>
+
         <div style="text-align: center;">
             <div class="table-of-contents">
             <a href="#supplementary-section" class="toc-button">Supplementary PDF</a>
@@ -689,7 +797,16 @@
         </div>
 
         <div id="supplementary-section" style="text-align: center; margin: var(--peacock-y-shift) 0 40px 0;">
-            <div class="paper-peacock" id="paperPeacock"></div>
+            <div class="paper-section-container">
+                <div class="paper-peacock" id="paperPeacock"></div>
+                <div class="abstract-divider"></div>
+                <div class="abstract-section">
+                    <h3 class="abstract-title">ABSTRACT</h3>
+                    <p class="abstract-text">
+                        While generative video models have achieved remarkable improvements in their diversity and quality, they have not yet been extensively explored against controllability as a means to achieve scalable edits through user-created constraints. Such exploration could be valuable, as it would open up expressive motion editing without introducing extensive computational overhead. In this work, we propose a method for controllable motion editing where users can edit motions in an existing user-provided video via user-input trajectories and object masks. Our approach allows for edits that are large in motion space and pixel space by noting that the denoising process is not only important for pixel-level generation, but also plays a role in maintaining temporal consistency and incorporating constraints. Our method addresses this problem, and the limitations of prior work, by acting on the complete video and in an unconstrained manner—allowing flexibility in choosing where, when, and how objects in scenes are moved. Please see our project page for more information and video demonstrations.
+                    </p>
+                </div>
+            </div>
         </div>
 
         <div id="summary-video-section" class="summary-video-section">
