@@ -565,27 +565,30 @@
             position: relative;
             width: 100%;
             max-width: 1400px;
-            height: 600px;
+            height: 400px;
             margin: 0 auto;
             display: flex;
             align-items: flex-end;
             justify-content: center;
-            cursor: pointer;
         }
 
-        .paper-page {
-            position: absolute;
-            bottom: 0;
+        .paper-peacock a {
+            display: block;
             width: 200px;
-            height: auto;
             transform-origin: 50% 110%;
             transition: transform 0.5s ease;
             filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
             transform: rotate(var(--rotation));
         }
 
-        .paper-peacock.expanded .paper-page {
+        .paper-peacock.expanded a {
             transform: rotate(var(--rotation-hover)) !important;
+        }
+
+        .paper-page {
+            width: 100%;
+            height: auto;
+            display: block;
         }
 
         .supplementary-content-section {
@@ -684,10 +687,8 @@
             </div>
         </div>
 
-        <div id="supplementary-section" style="text-align: center; margin: 40px 0;">
-            <a href="assets/motionv2v.pdf" target="_blank" style="display: block; text-decoration: none;">
-                <div class="paper-peacock" id="paperPeacock"></div>
-            </a>
+        <div id="supplementary-section" style="text-align: center; margin: 20px 0;">
+            <div class="paper-peacock" id="paperPeacock"></div>
         </div>
 
         <div class="top-divider"></div>
@@ -1788,6 +1789,12 @@
             const hoverSpread = 80; // degrees
 
             for (let i = 0; i < numPages; i++) {
+                const link = document.createElement('a');
+                link.href = 'assets/motionv2v.pdf';
+                link.target = '_blank';
+                link.style.position = 'absolute';
+                link.style.bottom = '0';
+
                 const img = document.createElement('img');
                 img.src = `assets/paper_images/paper_image_full_${i}.jpg`;
                 img.className = 'paper-page';
@@ -1797,20 +1804,21 @@
                 const defaultAngle = -defaultSpread/2 + (i * defaultSpread / (numPages - 1));
                 const hoverAngle = -hoverSpread/2 + (i * hoverSpread / (numPages - 1));
 
-                // Set CSS variables and z-index (first page on top)
-                img.style.setProperty('--rotation', `${defaultAngle}deg`);
-                img.style.setProperty('--rotation-hover', `${hoverAngle}deg`);
-                img.style.zIndex = numPages - i;
+                // Set CSS variables and z-index on anchor (first page on top)
+                link.style.setProperty('--rotation', `${defaultAngle}deg`);
+                link.style.setProperty('--rotation-hover', `${hoverAngle}deg`);
+                link.style.zIndex = numPages - i;
 
                 // Add hover listeners to expand on page hover
-                img.addEventListener('mouseenter', () => {
+                link.addEventListener('mouseenter', () => {
                     container.classList.add('expanded');
                 });
-                img.addEventListener('mouseleave', () => {
+                link.addEventListener('mouseleave', () => {
                     container.classList.remove('expanded');
                 });
 
-                container.appendChild(img);
+                link.appendChild(img);
+                container.appendChild(link);
             }
         }
 
