@@ -578,13 +578,14 @@
             bottom: 0;
             width: 200px;
             height: auto;
-            transform-origin: bottom center;
-            transition: transform 0.3s ease;
+            transform-origin: 50% 110%;
+            transition: transform 0.5s ease;
             filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+            transform: rotate(var(--rotation));
         }
 
-        .paper-peacock:hover .paper-page {
-            transform: translateY(-10px) rotate(var(--rotation));
+        .paper-peacock.expanded .paper-page {
+            transform: rotate(var(--rotation-hover)) !important;
         }
 
         .supplementary-content-section {
@@ -685,21 +686,7 @@
 
         <div id="supplementary-section" style="text-align: center; margin: 40px 0;">
             <a href="assets/motionv2v.pdf" target="_blank" style="display: block; text-decoration: none;">
-                <div class="paper-peacock">
-                    <img src="assets/paper_images/paper_image_full_0.jpg" class="paper-page" style="--rotation: -90deg; transform: rotate(-90deg);" alt="Page 1">
-                    <img src="assets/paper_images/paper_image_full_1.jpg" class="paper-page" style="--rotation: -75deg; transform: rotate(-75deg);" alt="Page 2">
-                    <img src="assets/paper_images/paper_image_full_2.jpg" class="paper-page" style="--rotation: -60deg; transform: rotate(-60deg);" alt="Page 3">
-                    <img src="assets/paper_images/paper_image_full_3.jpg" class="paper-page" style="--rotation: -45deg; transform: rotate(-45deg);" alt="Page 4">
-                    <img src="assets/paper_images/paper_image_full_4.jpg" class="paper-page" style="--rotation: -30deg; transform: rotate(-30deg);" alt="Page 5">
-                    <img src="assets/paper_images/paper_image_full_5.jpg" class="paper-page" style="--rotation: -15deg; transform: rotate(-15deg);" alt="Page 6">
-                    <img src="assets/paper_images/paper_image_full_6.jpg" class="paper-page" style="--rotation: 0deg; transform: rotate(0deg);" alt="Page 7">
-                    <img src="assets/paper_images/paper_image_full_7.jpg" class="paper-page" style="--rotation: 15deg; transform: rotate(15deg);" alt="Page 8">
-                    <img src="assets/paper_images/paper_image_full_8.jpg" class="paper-page" style="--rotation: 30deg; transform: rotate(30deg);" alt="Page 9">
-                    <img src="assets/paper_images/paper_image_full_9.jpg" class="paper-page" style="--rotation: 45deg; transform: rotate(45deg);" alt="Page 10">
-                    <img src="assets/paper_images/paper_image_full_10.jpg" class="paper-page" style="--rotation: 60deg; transform: rotate(60deg);" alt="Page 11">
-                    <img src="assets/paper_images/paper_image_full_11.jpg" class="paper-page" style="--rotation: 75deg; transform: rotate(75deg);" alt="Page 12">
-                    <img src="assets/paper_images/paper_image_full_12.jpg" class="paper-page" style="--rotation: 90deg; transform: rotate(90deg);" alt="Page 13">
-                </div>
+                <div class="paper-peacock" id="paperPeacock"></div>
             </a>
         </div>
 
@@ -1794,7 +1781,41 @@
             updateClocks();
         }
 
+        function initializePaperPeacock() {
+            const container = document.getElementById('paperPeacock');
+            const numPages = 13;
+            const defaultSpread = 50; // degrees
+            const hoverSpread = 80; // degrees
+
+            for (let i = 0; i < numPages; i++) {
+                const img = document.createElement('img');
+                img.src = `assets/paper_images/paper_image_full_${i}.jpg`;
+                img.className = 'paper-page';
+                img.alt = `Page ${i + 1}`;
+
+                // Calculate angles
+                const defaultAngle = -defaultSpread/2 + (i * defaultSpread / (numPages - 1));
+                const hoverAngle = -hoverSpread/2 + (i * hoverSpread / (numPages - 1));
+
+                // Set CSS variables and z-index (first page on top)
+                img.style.setProperty('--rotation', `${defaultAngle}deg`);
+                img.style.setProperty('--rotation-hover', `${hoverAngle}deg`);
+                img.style.zIndex = numPages - i;
+
+                // Add hover listeners to expand on page hover
+                img.addEventListener('mouseenter', () => {
+                    container.classList.add('expanded');
+                });
+                img.addEventListener('mouseleave', () => {
+                    container.classList.remove('expanded');
+                });
+
+                container.appendChild(img);
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
+            initializePaperPeacock();
             initializeDemoVideos();
             initializeGallery();
             initializeClockBackground();
