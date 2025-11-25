@@ -651,6 +651,7 @@
         .abstract-section {
             flex: 1;
             color: white;
+            margin-right: 200px;
         }
 
         .abstract-title {
@@ -805,7 +806,7 @@
                 <div class="abstract-section">
                     <h3 class="abstract-title">ABSTRACT</h3>
                     <p class="abstract-text">
-                        While generative video models have achieved remarkable improvements in their diversity and quality, they have not yet been extensively explored against controllability as a means to achieve scalable edits through user-created constraints. Such exploration could be valuable, as it would open up expressive motion editing without introducing extensive computational overhead. In this work, we propose a method for controllable motion editing where users can edit motions in an existing user-provided video via user-input trajectories and object masks. Our approach allows for edits that are large in motion space and pixel space by noting that the denoising process is not only important for pixel-level generation, but also plays a role in maintaining temporal consistency and incorporating constraints. Our method addresses this problem, and the limitations of prior work, by acting on the complete video and in an unconstrained manner—allowing flexibility in choosing where, when, and how objects in scenes are moved. Please see our project page for more information and video demonstrations.
+                        We propose a first truly non-local video editor. Unlike other video editing methods, which either avoid making large spatial changes or do so by corrupting video content, our method can manipulate video content in both space and time. MotionV2V can control where objects appear, how fast they move and in which direction, when they appear, and even the camera position. All of these edits are done with a simple interface: a point-based control mechanism, allowing these edits to be made with simple point trajectory modifications (no rotoscoping or masks!). Please read our paper and see our videos to learn more!
                     </p>
                 </div>
             </div>
