@@ -771,11 +771,11 @@
             margin-right: auto;
             margin-bottom: 60px;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: background-color 0.3s ease;
         }
 
         .citation-container:hover {
-            background: rgba(255, 255, 255, 0.25);
+            background-color: rgba(255, 255, 255, 0.15);
         }
 
         .citation-text {
@@ -2168,28 +2168,77 @@
                 }
             });
 
-            // Citation copy to clipboard functionality
+            // Citation copy to clipboard functionality - TO BE IMPLEMENTED
             const citationContainer = document.querySelector('.citation-container');
-            const citationText = document.getElementById('citationText');
+            const citationText = document.querySelector('.citation-text');
             const citationFeedback = document.getElementById('citationFeedback');
 
-            citationContainer.addEventListener('click', async () => {
-                try {
-                    await navigator.clipboard.writeText(citationText.textContent);
-                    citationFeedback.textContent = 'Copied!';
-                    citationFeedback.classList.add('copied');
+            if (citationContainer && citationText && citationFeedback) {
+                citationContainer.addEventListener('click', function() {
+                    // Get just the text content, stripping HTML tags
+                    const textToCopy = citationText.textContent || citationText.innerText;
 
-                    setTimeout(() => {
-                        citationFeedback.textContent = 'Click to copy';
-                        citationFeedback.classList.remove('copied');
-                    }, 2000);
-                } catch (err) {
-                    citationFeedback.textContent = 'Failed to copy';
-                    setTimeout(() => {
-                        citationFeedback.textContent = 'Click to copy';
-                    }, 2000);
-                }
-            });
+                    // Try modern clipboard API first
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(textToCopy).then(function() {
+                            // Success
+                            citationFeedback.textContent = 'Copied!';
+                            setTimeout(function() {
+                                citationFeedback.textContent = 'Click to copy';
+                            }, 2000);
+                        }).catch(function(err) {
+                            // Modern API failed, try legacy method
+                            copyTextLegacy(textToCopy);
+                        });
+                    } else {
+                        // Modern API not available, use legacy method
+                        copyTextLegacy(textToCopy);
+                    }
+
+                    function copyTextLegacy(text) {
+                        // Create a temporary textarea
+                        const textarea = document.createElement('textarea');
+                        textarea.value = text;
+                        textarea.style.position = 'fixed';
+                        textarea.style.top = '0';
+                        textarea.style.left = '0';
+                        textarea.style.width = '2em';
+                        textarea.style.height = '2em';
+                        textarea.style.padding = '0';
+                        textarea.style.border = 'none';
+                        textarea.style.outline = 'none';
+                        textarea.style.boxShadow = 'none';
+                        textarea.style.background = 'transparent';
+                        textarea.style.opacity = '0';
+
+                        document.body.appendChild(textarea);
+                        textarea.focus();
+                        textarea.select();
+
+                        try {
+                            const successful = document.execCommand('copy');
+                            if (successful) {
+                                citationFeedback.textContent = 'Copied!';
+                                setTimeout(function() {
+                                    citationFeedback.textContent = 'Click to copy';
+                                }, 2000);
+                            } else {
+                                citationFeedback.textContent = 'Copy failed - please select and copy manually';
+                                setTimeout(function() {
+                                    citationFeedback.textContent = 'Click to copy';
+                                }, 3000);
+                            }
+                        } catch (err) {
+                            citationFeedback.textContent = 'Copy failed - please select and copy manually';
+                            setTimeout(function() {
+                                citationFeedback.textContent = 'Click to copy';
+                            }, 3000);
+                        }
+
+                        document.body.removeChild(textarea);
+                    }
+                });
+            }
         });
     </script>
 </body>
