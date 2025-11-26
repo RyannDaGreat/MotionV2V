@@ -2055,7 +2055,13 @@
                 }
             }
 
-            window.addEventListener('scroll', requestTick);
+            // Detect Safari
+            const IS_SAFARI = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+            // Only update clocks on scroll if NOT on Safari or mobile
+            if (!IS_SAFARI && !IS_MOBILE) {
+                window.addEventListener('scroll', requestTick);
+            }
 
             // Recalculate positions on resize/zoom
             let resizeTicking = false;
