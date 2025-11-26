@@ -31,7 +31,6 @@
             padding: 40px 50px;
             position: relative;
             overflow-x: hidden;
-            scroll-behavior: smooth;
         }
 
         .glass {
@@ -617,7 +616,7 @@
 
         .toc-button:hover {
             background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
+            transform: scale(1.05);
             box-shadow: 0 6px 20px rgba(31, 38, 135, 0.3);
         }
 
@@ -2207,6 +2206,29 @@
             });
 
             // Smooth scroll for navbar anchor links
+            function smoothScrollTo(targetPosition, duration = 800) {
+                const startPosition = window.pageYOffset;
+                const distance = targetPosition - startPosition;
+                let startTime = null;
+
+                function animation(currentTime) {
+                    if (startTime === null) startTime = currentTime;
+                    const timeElapsed = currentTime - startTime;
+                    const run = ease(timeElapsed, startPosition, distance, duration);
+                    window.scrollTo(0, run);
+                    if (timeElapsed < duration) requestAnimationFrame(animation);
+                }
+
+                function ease(t, b, c, d) {
+                    t /= d / 2;
+                    if (t < 1) return c / 2 * t * t + b;
+                    t--;
+                    return -c / 2 * (t * (t - 2) - 1) + b;
+                }
+
+                requestAnimationFrame(animation);
+            }
+
             document.querySelectorAll('.toc-button[href^="#"]').forEach(button => {
                 button.addEventListener('click', (e) => {
                     e.preventDefault();
@@ -2214,10 +2236,7 @@
                     const targetElement = document.getElementById(targetId);
                     if (targetElement) {
                         const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
-                        window.scrollTo({
-                            top: targetPosition,
-                            behavior: 'smooth'
-                        });
+                        smoothScrollTo(targetPosition);
                     }
                 });
             });
