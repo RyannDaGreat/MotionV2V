@@ -18,7 +18,7 @@ demo_video_paths = [
 demo_videos = load_videos(demo_video_paths, use_cache=True)
 demo_videos = [video[:, 30:] for video in demo_videos]
 demo_videos=[demo_video[::2] for demo_video in demo_videos]
-arrow_image = load_image("../../arrow.png", use_cache=True)
+arrow_image = load_image("../arrow.png", use_cache=True)
 arrow_image = resize_image_to_fit(arrow_image, height=128)
 arrow_image=as_float_image(arrow_image)
 arrow_image = with_image_alpha(arrow_image, get_image_alpha(arrow_image)*.8)
