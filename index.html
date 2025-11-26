@@ -778,6 +778,74 @@
             display: block;
         }
 
+        .citation-container {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 32px;
+            margin: 0 auto 60px auto;
+            border-radius: var(--border-radius);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            max-width: 800px;
+            cursor: pointer;
+            transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            position: relative;
+        }
+
+        .citation-container:hover {
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.5);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .citation-text {
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0;
+            padding: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        .bib-type {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .bib-key {
+            color: rgba(255, 255, 255, 0.65);
+        }
+
+        .bib-field {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .bib-value {
+            color: rgba(255, 255, 255, 1);
+        }
+
+        .citation-feedback {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9em;
+            margin-top: 15px;
+            margin-bottom: 0;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .citation-container:hover .citation-feedback {
+            color: rgba(255, 255, 255, 1);
+        }
+
         footer {
             text-align: center;
             color: white;
@@ -860,9 +928,11 @@
         <div style="text-align: center;">
             <div class="table-of-contents">
             <a href="assets/MotionV2V.pdf" target="_blank" class="toc-button">Read Paper</a>
+            <a href="https://arxiv.org/abs/2511.20640" target="_blank" class="toc-button">arXiv</a>
             <a href="#summary-video-section" class="toc-button">Summary Video</a>
             <a href="#demo-gallery-section" class="toc-button">Demo Gallery</a>
             <a href="#baseline-comparison-section" class="toc-button">Baseline Comparisons</a>
+            <a href="#citation-section" class="toc-button">Citation</a>
             </div>
         </div>
 
@@ -908,6 +978,21 @@
         </p>
 
         <div id="video-containers"></div>
+
+        <div id="citation-section" class="section-divider">Citation</div>
+
+        <div class="citation-container">
+            <pre class="citation-text"><span class="bib-type">@misc</span>{<span class="bib-key">burgert2025motionv2veditingmotionvideo</span>,
+      <span class="bib-field">title</span>={<span class="bib-value">MotionV2V: Editing Motion in a Video</span>},
+      <span class="bib-field">author</span>={<span class="bib-value">Ryan Burgert and Charles Herrmann and Forrester Cole and Michael S Ryoo and Neal Wadhwa and Andrey Voynov and Nataniel Ruiz</span>},
+      <span class="bib-field">year</span>={<span class="bib-value">2025</span>},
+      <span class="bib-field">eprint</span>={<span class="bib-value">2511.20640</span>},
+      <span class="bib-field">archivePrefix</span>={<span class="bib-value">arXiv</span>},
+      <span class="bib-field">primaryClass</span>={<span class="bib-value">cs.CV</span>},
+      <span class="bib-field">url</span>={<span class="bib-value">https://arxiv.org/abs/2511.20640</span>},
+}</pre>
+            <div class="citation-feedback" id="citationFeedback">Click to copy</div>
+        </div>
     </div>
 
     <script>
@@ -2101,6 +2186,29 @@
                         const separator = currentSrc.includes('?') ? '&' : '?';
                         summaryVideoIframe.src = currentSrc + separator + 'autoplay=1';
                     }
+                }
+            });
+
+            // Citation copy to clipboard functionality
+            const citationContainer = document.querySelector('.citation-container');
+            const citationText = document.getElementById('citationText');
+            const citationFeedback = document.getElementById('citationFeedback');
+
+            citationContainer.addEventListener('click', async () => {
+                try {
+                    await navigator.clipboard.writeText(citationText.textContent);
+                    citationFeedback.textContent = 'Copied!';
+                    citationFeedback.classList.add('copied');
+
+                    setTimeout(() => {
+                        citationFeedback.textContent = 'Click to copy';
+                        citationFeedback.classList.remove('copied');
+                    }, 2000);
+                } catch (err) {
+                    citationFeedback.textContent = 'Failed to copy';
+                    setTimeout(() => {
+                        citationFeedback.textContent = 'Click to copy';
+                    }, 2000);
                 }
             });
         });
