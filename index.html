@@ -779,24 +779,16 @@
         }
 
         .citation-container {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 32px;
-            margin: 0 auto 60px auto;
-            border-radius: var(--border-radius);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
             max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 60px;
             cursor: pointer;
-            transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-            position: relative;
+            transition: background 0.3s ease;
         }
 
         .citation-container:hover {
-            background: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.5);
-            border-color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.25);
         }
 
         .citation-text {
@@ -981,7 +973,7 @@
 
         <div id="citation-section" class="section-divider">Citation</div>
 
-        <div class="citation-container">
+        <div class="info-box citation-container">
             <pre class="citation-text"><span class="bib-type">@misc</span>{<span class="bib-key">burgert2025motionv2veditingmotionvideo</span>,
       <span class="bib-field">title</span>={<span class="bib-value">MotionV2V: Editing Motion in a Video</span>},
       <span class="bib-field">author</span>={<span class="bib-value">Ryan Burgert and Charles Herrmann and Forrester Cole and Michael S Ryoo and Neal Wadhwa and Andrey Voynov and Nataniel Ruiz</span>},
