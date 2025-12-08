@@ -612,10 +612,12 @@
             video.controls = true;
             video.loop = true;
             video.muted = true;
-            video.playsInline = true;
+            video.autoplay = true;
             video.setAttribute('playsinline', '');
             video.setAttribute('webkit-playsinline', '');
-            video.preload = 'metadata';
+            video.setAttribute('muted', '');
+            video.setAttribute('autoplay', '');
+            video.preload = 'auto';
             wrapper.appendChild(video);
             card.appendChild(wrapper);
 
@@ -651,10 +653,12 @@
             video.controls = true;
             video.loop = true;
             video.muted = true;
-            video.playsInline = true;
+            video.autoplay = true;
             video.setAttribute('playsinline', '');
             video.setAttribute('webkit-playsinline', '');
-            video.preload = 'metadata';
+            video.setAttribute('muted', '');
+            video.setAttribute('autoplay', '');
+            video.preload = 'auto';
             wrapper.appendChild(video);
 
             const captions = document.createElement('div');
@@ -683,6 +687,21 @@
             COMPARISON_VIDEO_DATA.forEach((data, i) => {
                 container.appendChild(createComparisonCard(data, i));
             });
+        }
+
+        // Autoplay videos when visible (iOS requires this)
+        function setupVideoAutoplay() {
+            const videos = document.querySelectorAll('video');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.play().catch(() => {});
+                    } else {
+                        entry.target.pause();
+                    }
+                });
+            }, { threshold: 0.3 });
+            videos.forEach(video => observer.observe(video));
         }
 
         // Smooth scroll
@@ -729,6 +748,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             initializeDemos();
             initializeComparisons();
+            setupVideoAutoplay();
         });
     </script>
 </body>
