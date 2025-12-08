@@ -662,15 +662,15 @@
             video.preload = 'auto';
             wrapper.appendChild(video);
 
-            const captions = document.createElement('div');
-            captions.className = 'comparison-captions';
-            METHODS.forEach(m => {
-                const cap = document.createElement('div');
-                cap.className = `comparison-caption ${m.class}`;
-                cap.textContent = m.name;
-                captions.appendChild(cap);
-            });
-            wrapper.appendChild(captions);
+            // const captions = document.createElement('div');
+            // captions.className = 'comparison-captions';
+            // METHODS.forEach(m => {
+            //     const cap = document.createElement('div');
+            //     cap.className = `comparison-caption ${m.class}`;
+            //     cap.textContent = m.name;
+            //     captions.appendChild(cap);
+            // });
+            // wrapper.appendChild(captions);
             card.appendChild(wrapper);
 
             return card;
