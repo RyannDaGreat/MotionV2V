@@ -179,6 +179,47 @@
             display: block;
         }
 
+        /* Icon Key */
+        .icon-key {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            margin-bottom: 25px;
+        }
+
+        .icon-key-title {
+            color: white;
+            font-size: 1em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .icon-key-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .icon-key-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 10px;
+            border-radius: 8px;
+        }
+
+        .icon-key-item img {
+            width: 20px;
+            height: 20px;
+        }
+
+        .icon-key-item span {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.75em;
+        }
+
         /* Section headers */
         .section-header {
             text-align: center;
@@ -469,6 +510,28 @@
             <div class="section-divider"></div>
             <div class="summary-video-container glass">
                 <iframe src="https://www.youtube-nocookie.com/embed/AwgFBEk1dkw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+        </div>
+
+        <div class="icon-key glass">
+            <div class="icon-key-title">Edit Type Key</div>
+            <div class="icon-key-items">
+                <div class="icon-key-item">
+                    <img src="assets/edit_icons/hand_icon.png" alt="Hand">
+                    <span>Object Motion</span>
+                </div>
+                <div class="icon-key-item">
+                    <img src="assets/edit_icons/camera_icon.png" alt="Camera">
+                    <span>Camera Control</span>
+                </div>
+                <div class="icon-key-item">
+                    <img src="assets/edit_icons/clock_icon.png" alt="Clock">
+                    <span>Temporal Edit</span>
+                </div>
+                <div class="icon-key-item">
+                    <img src="assets/edit_icons/no_frames_in_common_icon.png" alt="All Frames">
+                    <span>All Frames Changed</span>
+                </div>
             </div>
         </div>
 
